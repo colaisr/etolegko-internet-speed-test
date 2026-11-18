@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import ssl
 import sys
 import time
 import urllib.error
@@ -12,9 +13,24 @@ import urllib.request
 REQUEST_COUNT = 10
 
 
+def https_context() -> ssl.SSLContext:
+    """CA bundle for HTTPS (macOS Python often needs certifi)."""
+    try:
+        import certifi
+    except ImportError:
+        return ssl.create_default_context()
+    return ssl.create_default_context(cafile=certifi.where())
+
+
 def download_once(url: str, timeout: float) -> tuple[float, int]:
     started = time.perf_counter()
-    with urllib.request.urlopen(url, timeout=timeout) as response:
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": "etolegko-speed-test/1.0 (candidate assignment)"},
+    )
+    with urllib.request.urlopen(
+        request, timeout=timeout, context=https_context()
+    ) as response:
         body = response.read()
     elapsed = time.perf_counter() - started
     return elapsed, len(body)
