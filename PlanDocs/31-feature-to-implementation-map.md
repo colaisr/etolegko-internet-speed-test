@@ -7,7 +7,7 @@
 | Фича | Ключевые файлы (создать) | Критерий smoke |
 | --- | --- | --- |
 | F0 | ✅ `legko/…` — settings, db, keitaro client, `/health` | curl `/health` → keitaro ok |
-| F1 | `templates/home.html`, `campaign_nav.open_by_keitaro_id` | open id + recent list |
+| F1 | ✅ home, HTMX search, `campaign_nav` | open id + recent list |
 | F2 | `campaign_creator.py`, `templates/creator.html` | кампания в Keitaro + redirect editor |
 | F3 | `stream_fetch.py`, `partials/offer_table.html` | auto fetch после create |
 | F4 | `offer_editor.py`, `domain/weights.py` | add/remove/pin, сумма 100 |
@@ -27,4 +27,5 @@
 | Страница | Когда |
 | --- | --- |
 | `ProductDocs/00-product-overview.md` | ✅ foundation |
-| `ProductDocs/01-…`, `02-…`, `03-…` | после соответствующих changes |
+| `ProductDocs/03-home-and-navigation.md` | ✅ home-navigation |
+| `ProductDocs/01-…`, `02-…` | после соответствующих changes |

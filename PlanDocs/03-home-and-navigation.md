@@ -1,6 +1,6 @@
 # Главная и навигация (F1)
 
-> **Статус:** актуален (2026-11-19). Фича **F1** в [`30-mvp-features-and-acceptance.md`](30-mvp-features-and-acceptance.md).
+> **Статус:** актуален (2026-11-19). Фича **F1** в [`30`](30-mvp-features-and-acceptance.md). **Реализовано:** [`ProductDocs/03-home-and-navigation.md`](../ProductDocs/03-home-and-navigation.md).
 
 ## Ценность
 
@@ -12,7 +12,7 @@
 | --- | --- |
 | Hero | Одна фраза про симулятор сплита (бренд «Это Легко») |
 | Primary CTA | «Создать кампанию» → Creator |
-| Open by ID | Поле + «Open»; валидация «число / не пусто» |
+| Open by ID | Combobox: ввод ID или названия → подсказки из Keitaro → «Open» |
 | Недавние | Кампании из SQLite, сортировка по `updated_at` desc, max 10 |
 
 ### Недавние — что показываем

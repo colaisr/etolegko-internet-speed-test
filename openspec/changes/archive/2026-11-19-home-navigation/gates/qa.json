@@ -1,0 +1,9 @@
+{
+  "gate": "qa",
+  "change": "home-navigation",
+  "round": 1,
+  "verdict": "pass",
+  "reviewed_at": "2026-11-19T06:42:30.000Z",
+  "checks": ["pytest", "ruff", "ручная приёмка владельца F1"],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} — Legko{% endblock %}
+{% block content %}
+<section class="card">
+  <p><a href="/" class="link-back">← Главная</a></p>
+  <h1 class="page-title">{{ campaign.name }}</h1>
+  <p class="text-muted">
+    Keitaro ID: <strong>{{ campaign.keitaro_campaign_id }}</strong>
+    <span class="badge {{ badge_class }}">{{ badge_label }}</span>
+  </p>
+  <p class="text-muted">Редактор потоков и офферов — change <strong>stream-editor-fetch-ui</strong> (F3).</p>
+</section>
+{% endblock %}

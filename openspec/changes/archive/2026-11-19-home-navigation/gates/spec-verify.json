@@ -1,0 +1,8 @@
+{
+  "gate": "spec-verify",
+  "change": "home-navigation",
+  "round": 1,
+  "verdict": "pass",
+  "reviewed_at": "2026-11-19T06:40:00.000Z",
+  "findings": []
+}

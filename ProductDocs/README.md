@@ -23,6 +23,7 @@
 | Файл | Что описывает | Замысел (PlanDocs) | Спеки (OpenSpec) | Обновлено |
 | --- | --- | --- | --- | --- |
 | [`00-product-overview.md`](00-product-overview.md) | Что такое Legko сейчас (F0) | [`00-product-overview`](../PlanDocs/00-product-overview.md) | app-foundation, health, keitaro-client | 2026-11-19 · foundation-keitaro-client |
+| [`03-home-and-navigation.md`](03-home-and-navigation.md) | Главная, Open, недавние (F1) | [`03-home-and-navigation`](../PlanDocs/03-home-and-navigation.md) | home-navigation | 2026-11-19 · home-navigation |
 
 ## 4. Как добавить страницу
 

@@ -1,0 +1,21 @@
+{% if not query %}
+<p class="combo-hint text-muted text-muted--compact">Начните вводить ID или название кампании</p>
+{% elif not items %}
+<p class="combo-hint text-muted text-muted--compact">Ничего не найдено в Keitaro</p>
+{% else %}
+<ul class="combo-list" role="listbox">
+  {% for item in items %}
+  <li role="option">
+    <button
+      type="button"
+      class="combo-option"
+      data-keitaro-id="{{ item.id }}"
+      data-label="{{ item.name }}"
+    >
+      <span class="combo-option-id">#{{ item.id }}</span>
+      <span class="combo-option-name">{{ item.name }}</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}

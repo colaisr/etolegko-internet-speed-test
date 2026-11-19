@@ -51,3 +51,46 @@ class KeitaroClient:
                 message=f"Keitaro: HTTP {response.status_code}",
             )
         return PingResult(ok=True, message="ok")
+
+    async def _request(self, method: str, path: str, **kwargs) -> httpx.Response:
+        if not self._api_key.strip():
+            raise KeitaroError("Не задан KEITARO_API_KEY")
+        url = f"{self._base_url}/{path.lstrip('/')}"
+        try:
+            async with httpx.AsyncClient(timeout=self._timeout) as client:
+                return await client.request(method, url, headers=self._headers(), **kwargs)
+        except httpx.TimeoutException as exc:
+            raise KeitaroError("Keitaro: таймаут соединения") from exc
+        except httpx.RequestError as exc:
+            raise KeitaroError("Keitaro: ошибка сети") from exc
+
+    async def get_campaign(self, campaign_id: int) -> dict | None:
+        response = await self._request("GET", f"campaigns/{campaign_id}")
+        if response.status_code == 404:
+            return None
+        if response.status_code in (401, 403):
+            raise KeitaroError("Keitaro: неверный API key или доступ запрещён")
+        if response.status_code >= 400:
+            raise KeitaroError(f"Keitaro: HTTP {response.status_code}")
+        data = response.json()
+        if isinstance(data, list):
+            return data[0] if data else None
+        if isinstance(data, dict) and "rows" in data:
+            rows = data.get("rows") or []
+            return rows[0] if rows else None
+        return data if isinstance(data, dict) else None
+
+    async def list_campaigns(self, *, limit: int = 100) -> list[dict]:
+        response = await self._request("GET", "campaigns", params={"limit": limit})
+        if response.status_code in (401, 403):
+            raise KeitaroError("Keitaro: неверный API key или доступ запрещён")
+        if response.status_code >= 400:
+            raise KeitaroError(f"Keitaro: HTTP {response.status_code}")
+        data = response.json()
+        if isinstance(data, list):
+            return [row for row in data if isinstance(row, dict)]
+        if isinstance(data, dict):
+            rows = data.get("rows") or data.get("data")
+            if isinstance(rows, list):
+                return [row for row in rows if isinstance(row, dict)]
+        return []

@@ -273,7 +273,7 @@ KEITARO_GOOGLE_REDIRECT_URL=https://www.google.com
 ## 13. OpenSpec: порядок changes (рекомендация developer)
 
 1. ~~`foundation-keitaro-client`~~ — **готово** (F0); ProductDocs: `00-product-overview.md`  
-2. `home-navigation` — F1  
+2. ~~`home-navigation`~~ — **готово** (F1); ProductDocs: `03-home-and-navigation.md`  
 3. `campaign-creator` — F2  
 4. `stream-editor-fetch-ui` — F3  
 5. `stream-editor-offer-ops` — F4  

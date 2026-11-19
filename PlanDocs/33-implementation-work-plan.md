@@ -47,7 +47,7 @@
 
 ## Change 2: `home-navigation`
 
-- [ ] **Заархивирован**
+- [x] **Заархивирован**
 
 | | |
 | --- | --- |
@@ -214,7 +214,7 @@
 | # | Change | Фичи | Готово |
 | --- | --- | --- | --- |
 | 1 | `foundation-keitaro-client` | F0 | [x] |
-| 2 | `home-navigation` | F1 | [ ] |
+| 2 | `home-navigation` | F1 | [x] |
 | 3 | `campaign-creator` | F2 | [ ] |
 | 4 | `stream-editor-fetch-ui` | F3 | [ ] |
 | 5 | `stream-editor-offer-ops` | F4 | [ ] |

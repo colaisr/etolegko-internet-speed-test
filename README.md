@@ -1,6 +1,6 @@
 # Legko
 
-Обёртка над Keitaro (тестовое задание). Репозиторий на этапе **скелета**: продуктовая память, агенты и OpenSpec (по образцу проекта Gloom), **код приложения пока не добавлен**.
+Обёртка над Keitaro (тестовое задание): Legko — симулятор сплита офферов с Push в Keitaro.
 
 ## Память проекта
 
@@ -14,16 +14,33 @@
 | [`PlanDocs/28-pre-implementation-process.md`](PlanDocs/28-pre-implementation-process.md) | Фазы до реализации (без PM) |
 | [`PlanDocs/33-implementation-work-plan.md`](PlanDocs/33-implementation-work-plan.md) | **Реализация: 8 changes, чеклисты** |
 
-## Запуск приложения (change foundation)
+## Запуск приложения
 
 ```bash
 cd legko
 python3.12 -m venv .venv && source .venv/bin/activate
 uv pip install -e ".[dev]"   # или pip install -e ".[dev]"
-cp ../.env.example ../.env    # заполнить KEITARO_API_KEY
 alembic upgrade head
 uvicorn legko.main:app --reload
 ```
+
+### Ключ Keitaro (обязательно)
+
+1. В трекере: **Account → API keys** — создайте ключ.
+2. В **корне репозитория** (рядом с `PlanDocs/`, не внутри `legko/`):
+
+```bash
+cp .env.example .env
+```
+
+3. В `.env` пропишите:
+
+```bash
+KEITARO_API_KEY=ваш_ключ_без_кавычек
+KEITARO_BASE_URL=https://tlgk.host/admin_api/v1   # если другой хост — замените
+```
+
+Файл `.env` в git **не коммитится**. Без ключа `/health` и поиск кампаний на главной не работают.
 
 ### Git hooks (ProductDocs перед push)
 

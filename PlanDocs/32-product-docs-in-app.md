@@ -46,7 +46,7 @@
 | Файл | Содержание |
 | --- | --- |
 | `00-product-overview.md` | ✅ Что такое Legko, F0, `/health` |
-| `03-home-and-navigation.md` | Главная, недавние, open by id |
+| `03-home-and-navigation.md` | ✅ Главная, combobox, недавние |
 | `01-campaign-creator.md` | Создание кампании |
 | `02-stream-offer-editor.md` | Редактор, Push, Cancel, Fetch |
 

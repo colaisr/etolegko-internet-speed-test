@@ -1,0 +1,17 @@
+{
+  "gate": "docs-sync",
+  "change": "home-navigation",
+  "round": 1,
+  "verdict": "pass",
+  "reviewed_at": "2026-11-19T06:43:00.000Z",
+  "pages": [
+    "ProductDocs/03-home-and-navigation.md",
+    "ProductDocs/00-product-overview.md"
+  ],
+  "planDocsMarked": [
+    "PlanDocs/03-home-and-navigation.md",
+    "PlanDocs/30-mvp-features-and-acceptance.md",
+    "PlanDocs/31-feature-to-implementation-map.md"
+  ],
+  "findings": []
+}

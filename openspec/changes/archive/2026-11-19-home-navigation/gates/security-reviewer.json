@@ -1,0 +1,14 @@
+{
+  "gate": "security-reviewer",
+  "change": "home-navigation",
+  "round": 1,
+  "verdict": "pass",
+  "reviewed_at": "2026-11-19T06:41:30.000Z",
+  "findings": [
+    {
+      "kind": "mismatch",
+      "where": "GET /campaigns/search",
+      "what": "Поиск тянет до 150 кампаний — без авторизации UI; приемлемо для MVP single-user."
+    }
+  ]
+}

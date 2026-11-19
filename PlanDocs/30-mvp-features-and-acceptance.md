@@ -37,6 +37,8 @@
 
 ## F1 — Главная и навигация
 
+> **Реализовано** (2026-11-19, change `home-navigation`). Как работает сейчас: [`ProductDocs/03-home-and-navigation.md`](../ProductDocs/03-home-and-navigation.md).
+
 **Ценность:** не искать кампанию вслепую.
 
 **Поведение:** см. [`03-home-and-navigation.md`](03-home-and-navigation.md).
