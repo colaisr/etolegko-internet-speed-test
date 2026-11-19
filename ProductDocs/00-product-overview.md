@@ -45,3 +45,4 @@ Legko — рабочее место медиабайера поверх Keitaro:
 | 2026-11-19 | foundation-keitaro-client | Первая страница ProductDocs: каркас приложения, /health, /api/docs |
 | 2026-11-19 | docs-sync-followup | Уточнения F0, OpenAPI; синхронизация с планом и хуком push |
 | 2026-11-19 | home-navigation | Ссылка на F1; детализация главной в 03-home |
+| 2026-11-19 | campaign-creator | F2 создатель; обзор и ссылки на 01/03 |
