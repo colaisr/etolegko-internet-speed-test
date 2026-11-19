@@ -1,0 +1,42 @@
+schema: spec-driven
+
+context: |
+  Legko — обёртка над Keitaro для создания и редактирования рекламных кампаний (тестовое задание).
+  Замысел и термины появятся в PlanDocs после проработки MVP с владельцем.
+
+  Память проекта — три слоя, не смешивать:
+  - PlanDocs/ — замысел («зачем и что»). Вход через PlanDocs/README.md.
+  - openspec/specs/ и openspec/changes/ — технические спеки.
+  - ProductDocs/ — как продукт работает сейчас для бизнеса.
+
+  Стек фиксируется в PlanDocs/15-architecture.md (файл появится позже). До фиксации не придумывай
+  технологии в design.md: пиши «решение по стеку — вне этого change».
+  Конституция: AGENTS.md, ProjectDocs/roles/README.md, ProjectDocs/roles/openspec-gates.md.
+
+  Язык артефактов — русский. Ключевые слова OpenSpec (Requirement, Scenario, WHEN/THEN, SHALL/MUST)
+  оставляй по формату, остальной текст — по-русски.
+
+rules:
+  proposal:
+    - "Начни с PlanDocs/README.md: найди нормативный раздел для задачи. Если страницы ProductDocs для области уже есть — прочитай и её."
+    - "В proposal назови: раздел PlanDocs, страницу ProductDocs (создать/обновить) и capability в openspec/specs."
+    - "Секции: «Бизнес-обоснование», «Вне scope»; не выдумывай цифры и сроки."
+    - "Описывай «что» и «почему», не «как»."
+  design:
+    - "Не вводи технологию, которой нет в PlanDocs/15-architecture.md. Если решения нет — зафиксируй вопрос и остановись."
+    - "Интеграция с Keitaro API: пометь необходимость security-reviewer при работе с ключами и внешним API."
+  tasks:
+    - "Последняя группа перед archive — валидация (qa)."
+    - "Добавь группу «Гейты ролей» по ProjectDocs/roles/openspec-gates.md."
+    - "ОБЯЗАТЕЛЬНО группа «ProductDocs»: обновить или подтвердить отсутствие бизнес-изменений."
+    - "Задачи в tasks.md закрывай только по факту выполнения."
+
+operations:
+  apply:
+    guidance:
+      - "Реализуй только tasks.md. Нет решения в спеке или PlanDocs — спроси владельца."
+      - "ProductDocs — по фактической реализации, не по замыслу."
+  archive:
+    guidance:
+      - "Перед archive: `node scripts/verify-change-gates.mjs --change <slug> --archive`."
+      - "После archive обнови «Обновлено» в ProductDocs/README.md для затронутых страниц."

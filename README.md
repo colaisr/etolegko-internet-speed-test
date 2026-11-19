@@ -1,45 +1,23 @@
-# Internet download speed check (ETOLEGKO test task)
+# Legko
 
-Console script that downloads a given URL **10 times in a row**, waits for each full response, then prints:
+Обёртка над Keitaro (тестовое задание). Репозиторий на этапе **скелета**: продуктовая память, агенты и OpenSpec (по образцу проекта Gloom), **код приложения пока не добавлен**.
 
-- average time per request;
-- total bytes downloaded;
-- **download speed in MiB/s** (mebibytes per second: 1 MiB = 1024² bytes).
+## Память проекта
 
-Uses `urllib` from the standard library plus **certifi** for HTTPS certificates (fixes `CERTIFICATE_VERIFY_FAILED` on macOS with python.org builds).
+| Папка | Назначение |
+| --- | --- |
+| [`AGENTS.md`](AGENTS.md) | Конституция и процесс |
+| [`PlanDocs/`](PlanDocs/README.md) | Замысел продукта (сейчас пустой каталог) |
+| [`ProductDocs/`](ProductDocs/README.md) | Как продукт работает сейчас (пусто) |
+| [`openspec/`](openspec/README.md) | Технические спеки и changes |
+| [`ProjectDocs/`](ProjectDocs/roles/README.md) | Роли агентов, PM, дизайн-артефакты |
 
-## Requirements
+## Агенты и OpenSpec
 
-- Python 3.9+
+- Команды Cursor: `.cursor/commands/` (`/opsx:propose`, `/opsx:apply`, …)
+- Роли: `ProjectDocs/roles/`, субагенты Claude: `.claude/agents/`
+- Гейты и verify: `scripts/verify-change-gates.mjs`, `ProjectDocs/roles/openspec-gates.md`
 
-## Setup
+## Запуск кода
 
-```bash
-pip install -r requirements.txt
-```
-
-## Run
-
-```bash
-python3 speed_test.py "https://placehold.co/4000x3000.jpg"
-```
-
-The URL must be a **direct** link to the file (not Google `imgres` or a HTML page). The example above is a public JPEG (~97 KiB).
-
-Optional per-request timeout (seconds):
-
-```bash
-python3 speed_test.py "https://placehold.co/4000x3000.jpg" --timeout 60
-```
-
-## Speed units
-
-Throughput is computed as:
-
-`total_bytes / sum(request_durations)`
-
-because requests run **sequentially**. The result is shown as **MiB/s** (binary megabytes per second).
-
-## AI usage (for the application form)
-
-Задание по сути простое — написал бы и без нейросети, но с ИИ (Cursor / Claude) получилось заметно быстрее: скелет скрипта и README, потом сам прошёлся по коду. Прогнал локально, проверил вывод построчно, убрал лишнее, для HTTPS на macOS добавил только certifi.
+Появится после выбора стека в PlanDocs и первого change «фундамент».
