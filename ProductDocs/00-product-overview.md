@@ -1,6 +1,6 @@
 # Обзор Legko
 
-> **Обновлено:** 2026-11-19 · **Change:** foundation-keitaro-client  
+> **Обновлено:** 2026-11-19 · **Change:** foundation-keitaro-client · **PlanDocs (F0):** реализовано  
 > **Замысел:** [PlanDocs/00-product-overview.md](../PlanDocs/00-product-overview.md) · **Технические спеки:** openspec/specs (после archive)
 
 ## 1. Что это и зачем
@@ -9,11 +9,12 @@ Legko — рабочее место медиабайера поверх Keitaro:
 
 ## 2. Как это работает сейчас
 
-На этапе **foundation** доступны:
+На этапе **foundation** (F0) доступны:
 
 - веб-приложение со стартовой страницей и корпоративным оформлением;
-- проверка готовности по адресу `/health` (база данных и подключение к Keitaro);
-- ссылка «Документация» в шапке (полный раздел `/docs` — в change `project-readme-delivery`).
+- проверка готовности по адресу **`/health`** (база данных и подключение к Keitaro);
+- техническая OpenAPI-схема на **`/api/docs`** (путь `/docs` зарезервирован под ProductDocs, F9);
+- ссылка «Документация» в шапке ведёт на **`/docs`** — рендер ProductDocs появится в change `project-readme-delivery`.
 
 Создание кампаний и редактор офферов появятся в следующих обновлениях.
 
@@ -39,4 +40,5 @@ Legko — рабочее место медиабайера поверх Keitaro:
 
 | Дата | Change | Что изменилось |
 | --- | --- | --- |
-| 2026-11-19 | foundation-keitaro-client | Первая страница ProductDocs: каркас приложения и /health |
+| 2026-11-19 | foundation-keitaro-client | Первая страница ProductDocs: каркас приложения, /health, /api/docs |
+| 2026-11-19 | docs-sync-followup | Уточнения F0, OpenAPI; синхронизация с планом и хуком push |

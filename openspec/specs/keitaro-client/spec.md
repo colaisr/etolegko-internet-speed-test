@@ -1,7 +1,8 @@
 # keitaro-client Specification
 
 ## Purpose
-TBD - created by archiving change foundation-keitaro-client. Update Purpose after archive.
+
+HTTP-адаптер Keitaro Admin API: аутентификация Api-Key и лёгкая проверка связи (`ping`).
 
 ## Requirements
 

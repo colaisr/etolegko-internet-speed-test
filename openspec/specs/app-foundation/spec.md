@@ -1,7 +1,8 @@
 # app-foundation Specification
 
 ## Purpose
-TBD - created by archiving change foundation-keitaro-client. Update Purpose after archive.
+
+Каркас приложения Legko: конфигурация, FastAPI, SQLite, миграции, статика и базовый layout UI.
 
 ## Requirements
 

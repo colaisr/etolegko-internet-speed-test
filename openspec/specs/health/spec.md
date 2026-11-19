@@ -1,7 +1,8 @@
 # health Specification
 
 ## Purpose
-TBD - created by archiving change foundation-keitaro-client. Update Purpose after archive.
+
+Readiness endpoint для оператора и проверяющего: статус приложения, БД и Keitaro без утечки секретов.
 
 ## Requirements
 

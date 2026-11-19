@@ -25,6 +25,14 @@ alembic upgrade head
 uvicorn legko.main:app --reload
 ```
 
+### Git hooks (ProductDocs перед push)
+
+```bash
+git config core.hooksPath .githooks
+chmod +x .githooks/pre-push
+node scripts/verify-productdocs.mjs   # ручная проверка
+```
+
 ## Агенты и OpenSpec
 
 - Команды Cursor: `.cursor/commands/` (`/opsx:propose`, `/opsx:apply`, …)

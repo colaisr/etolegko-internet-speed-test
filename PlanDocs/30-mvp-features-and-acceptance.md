@@ -22,6 +22,8 @@
 
 ## F0 — Основа приложения
 
+> **Реализовано** (2026-11-19, change `foundation-keitaro-client`). Как работает сейчас: [`ProductDocs/00-product-overview.md`](../ProductDocs/00-product-overview.md).
+
 **Ценность:** инструмент реально подключается к тестовому Keitaro.
 
 | AC | Критерий |

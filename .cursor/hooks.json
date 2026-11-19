@@ -4,6 +4,9 @@
     "beforeShellExecution": [
       {
         "command": "node scripts/hooks/guard-archive.mjs"
+      },
+      {
+        "command": "node scripts/hooks/guard-productdocs-push.mjs"
       }
     ]
   }

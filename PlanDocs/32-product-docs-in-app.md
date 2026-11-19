@@ -32,7 +32,8 @@
 
 1. В **tasks.md** каждого change — группа **ProductDocs** (как в Gloom/Legko).
 2. **docs-sync** перед archive.
-3. Пользователь на `/docs` видит то же, что в git — **поставка = код + ProductDocs + рендер**.
+3. Перед **`git push`**: `node scripts/verify-productdocs.mjs` и хук [`.githooks/pre-push`](../.githooks/pre-push) — см. [`openspec-gates.md`](../ProjectDocs/roles/openspec-gates.md) § push.
+4. Пользователь на `/docs` видит то же, что в git — **поставка = код + ProductDocs + рендер**.
 
 ## Приёмка
 
@@ -44,7 +45,7 @@
 
 | Файл | Содержание |
 | --- | --- |
-| `00-product-overview.md` | Что такое Legko, симулятор сплита |
+| `00-product-overview.md` | ✅ Что такое Legko, F0, `/health` |
 | `03-home-and-navigation.md` | Главная, недавние, open by id |
 | `01-campaign-creator.md` | Создание кампании |
 | `02-stream-offer-editor.md` | Редактор, Push, Cancel, Fetch |

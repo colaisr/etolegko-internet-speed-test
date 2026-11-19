@@ -72,6 +72,13 @@ product (гейт 1) → вердикт go до apply: change опирается
 - `docs-sync`: `pages` обязателен при `pass`; при `waived` обязателен `waiver_reason`.
 - Скрипт проверяет `gate`, `change`, `reviewed_at`, вердикт, порядок и поля docs-sync. Остальные поля — для людей и агентов.
 
+## Замок на push (ProductDocs)
+
+- **Скрипт:** `node scripts/verify-productdocs.mjs` — индекс, журнал change, связка «код ↔ ProductDocs».
+- **Git:** `.githooks/pre-push` → `scripts/hooks/guard-productdocs-push.mjs`. Один раз: `git config core.hooksPath .githooks` (локально, без изменения `git config` в CI).
+- **Агент:** тот же guard в `.cursor/hooks.json` и `.claude/settings.json` перед `git push`.
+- **Правило:** если в push меняются `legko/` или `openspec/specs/`, должны меняться и страницы `ProductDocs/*.md` (не только README).
+
 ## Замок на archive
 
 - **Скрипт:** `node scripts/verify-change-gates.mjs --change <slug> [--archive]`. Код возврата 0 только при зелёных гейтах; с `--archive` ещё все задачи в `tasks.md` закрыты и есть группа «ProductDocs».
