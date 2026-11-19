@@ -5,7 +5,12 @@ from legko.db.session import engine
 from legko.main import app
 
 
-def test_health_degraded_without_keitaro_key():
+def test_health_degraded_without_keitaro_key(monkeypatch):
+    monkeypatch.setenv("KEITARO_API_KEY", "")
+    from legko.settings import get_settings
+
+    get_settings.cache_clear()
+
     Base.metadata.create_all(bind=engine)
     with TestClient(app) as client:
         response = client.get("/health")
@@ -13,3 +18,6 @@ def test_health_degraded_without_keitaro_key():
     payload = response.json()
     assert payload["database"]["ok"] is True
     assert payload["keitaro"]["ok"] is False
+    assert "KEITARO_API_KEY" in payload["keitaro"]["message"]
+
+    get_settings.cache_clear()

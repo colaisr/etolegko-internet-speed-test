@@ -1,0 +1,20 @@
+{
+  "gate": "code-reviewer",
+  "change": "foundation-keitaro-client",
+  "round": 1,
+  "verdict": "pass",
+  "reviewed_at": "2026-11-19T05:46:00.000Z",
+  "scope_files": ["legko/"],
+  "findings": [
+    {
+      "kind": "mismatch",
+      "where": "legko/legko/main.py",
+      "what": "Зарезервирован /docs для F9: OpenAPI перенесён на /api/docs (исправлено в verify)."
+    },
+    {
+      "kind": "not-done",
+      "where": "legko/tests/unit/test_health.py",
+      "what": "Тест health изолирован через monkeypatch KEITARO_API_KEY (исправлено в verify)."
+    }
+  ]
+}

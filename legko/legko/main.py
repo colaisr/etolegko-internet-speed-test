@@ -14,7 +14,8 @@ from legko.settings import get_settings
 BASE_DIR = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
-app = FastAPI(title="Legko", version="0.1.0")
+# /docs — зарезервировано под ProductDocs (F9); OpenAPI — отдельно.
+app = FastAPI(title="Legko", version="0.1.0", docs_url="/api/docs", redoc_url="/api/redoc")
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
 

@@ -23,7 +23,7 @@
 
 ## Change 1: `foundation-keitaro-client`
 
-- [ ] **Заархивирован** (поставь `[x]` после archive)
+- [x] **Заархивирован** (поставь `[x]` после archive)
 
 | | |
 | --- | --- |
@@ -213,7 +213,7 @@
 
 | # | Change | Фичи | Готово |
 | --- | --- | --- | --- |
-| 1 | `foundation-keitaro-client` | F0 | [ ] |
+| 1 | `foundation-keitaro-client` | F0 | [x] |
 | 2 | `home-navigation` | F1 | [ ] |
 | 3 | `campaign-creator` | F2 | [ ] |
 | 4 | `stream-editor-fetch-ui` | F3 | [ ] |

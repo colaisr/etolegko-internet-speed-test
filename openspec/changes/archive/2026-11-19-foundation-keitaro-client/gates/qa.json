@@ -1,0 +1,14 @@
+{
+  "gate": "qa",
+  "change": "foundation-keitaro-client",
+  "round": 1,
+  "verdict": "pass",
+  "reviewed_at": "2026-11-19T05:47:30.000Z",
+  "checks": [
+    "alembic upgrade head",
+    "pytest tests/unit/test_health.py",
+    "ruff check legko tests",
+    "curl /health локально (degraded без ключа — ожидаемо)"
+  ],
+  "findings": []
+}

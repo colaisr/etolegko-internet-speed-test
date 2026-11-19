@@ -16,11 +16,11 @@
 
 ## Гейты ролей
 
-- [ ] 3.1 spec-verify
-- [ ] 3.2 code-reviewer
-- [ ] 3.3 security-reviewer
-- [ ] 3.4 qa
-- [ ] 3.5 docs-sync
+- [x] 3.1 spec-verify
+- [x] 3.2 code-reviewer
+- [x] 3.3 security-reviewer
+- [x] 3.4 qa
+- [x] 3.5 docs-sync
 
 ## Валидация (qa)
 

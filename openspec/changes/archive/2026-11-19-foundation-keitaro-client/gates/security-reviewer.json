@@ -1,0 +1,19 @@
+{
+  "gate": "security-reviewer",
+  "change": "foundation-keitaro-client",
+  "round": 1,
+  "verdict": "pass",
+  "reviewed_at": "2026-11-19T05:46:30.000Z",
+  "findings": [
+    {
+      "kind": "mismatch",
+      "where": "GET /health",
+      "what": "Каждый запрос вызывает Keitaro ping — приемлемо для MVP single-operator; кэш/лимит — позже."
+    },
+    {
+      "kind": "mismatch",
+      "where": "settings.py",
+      "what": "Рекомендация SecretStr для KEITARO_API_KEY — отложено, секрет не логируется."
+    }
+  ]
+}
