@@ -9,8 +9,7 @@ context: |
   - openspec/specs/ и openspec/changes/ — технические спеки.
   - ProductDocs/ — как продукт работает сейчас для бизнеса.
 
-  Стек фиксируется в PlanDocs/15-architecture.md (файл появится позже). До фиксации не придумывай
-  технологии в design.md: пиши «решение по стеку — вне этого change».
+  Стек: FastAPI, SQLAlchemy 2, Alembic, SQLite, Jinja2, HTMX, httpx. Норма: PlanDocs/15-architecture.md, openspec/project.md.
   Конституция: AGENTS.md, ProjectDocs/roles/README.md, ProjectDocs/roles/openspec-gates.md.
 
   Язык артефактов — русский. Ключевые слова OpenSpec (Requirement, Scenario, WHEN/THEN, SHALL/MUST)

@@ -28,4 +28,4 @@
 
 ## Техконтекст
 
-Стек и `project.md` — после `PlanDocs/15-architecture.md`.
+Стек: [`project.md`](project.md), архитектура: [`PlanDocs/15-architecture.md`](../PlanDocs/15-architecture.md).

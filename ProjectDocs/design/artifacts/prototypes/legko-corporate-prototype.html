@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Legko — Keitaro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-bg-app: #f4f4f5;
+      --color-surface: #ffffff;
+      --color-header: #0d1117;
+      --color-accent: #c8f542;
+      --color-accent-hover: #b8e636;
+      --color-on-accent: #0a0a0a;
+      --color-text: #18181b;
+      --color-text-muted: #71717a;
+      --color-text-on-dark: #fafafa;
+      --color-border: #e4e4e7;
+      --status-sync: #16a34a;
+      --status-draft: #ca8a04;
+      --status-draft-border: #eab308;
+      --status-removed: #f4f4f5;
+      --color-danger: #dc2626;
+      --font-sans: "Montserrat", system-ui, sans-serif;
+      --radius-sm: 2px;
+    }
+  </style>
+  <link rel="stylesheet" href="legko-tokens.css" />
+  <style>
+    /* Fallback if tokens file missing in preview */
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-app); color: var(--color-text); font-size: 14px; }
+    .app-header {
+      background: var(--color-header);
+      color: var(--color-text-on-dark);
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-bottom: 1px solid #27272a;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.04em; font-size: 15px; }
+    .logo-cube { width: 28px; height: 28px; background: linear-gradient(135deg, var(--color-accent) 45%, #5eead4 55%); opacity: .9; }
+    .logo span { color: var(--color-accent); }
+    .nav-demo { display: flex; gap: 4px; }
+    .nav-demo a {
+      color: var(--color-text-on-dark);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 8px 14px;
+      text-transform: uppercase;
+    }
+    .nav-demo a.active { outline: 1px solid var(--color-accent); background: rgba(200,245,66,.1); }
+    .main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px; }
+    .btn-primary {
+      background: var(--color-accent);
+      color: var(--color-on-accent);
+      border: none;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+    }
+    .btn-primary:hover { background: var(--color-accent-hover); }
+    .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-secondary {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+    }
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card--draft { border: 2px solid var(--status-draft-border); }
+    .badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-sm); display: inline-block; text-transform: uppercase; letter-spacing: 0.04em; }
+    .badge-draft { background: #fef9c3; color: #a16207; }
+    .badge-sync { border: 1px solid var(--status-sync); color: var(--status-sync); }
+    label.field-label { display: block; font-size: 11px; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    input.field {
+      width: 100%;
+      height: 40px;
+      border: 1px solid var(--color-border);
+      padding: 0 12px;
+      font-family: inherit;
+      border-radius: var(--radius-sm);
+    }
+    input.field:focus { outline: 2px solid var(--color-accent); outline-offset: 0; }
+    .preview-dashed {
+      border: 1px dashed var(--color-border);
+      background: #fafafa;
+      padding: 16px;
+      font-size: 13px;
+      margin-top: 16px;
+    }
+    .hero-strip {
+      background: var(--color-header);
+      color: var(--color-text-on-dark);
+      padding: 28px 24px;
+      margin: -32px -24px 32px;
+      border-bottom: 3px solid var(--color-accent);
+    }
+    .hero-strip h1 { margin: 0 0 8px; font-size: 22px; font-weight: 700; }
+    .hero-strip p { margin: 0; color: #a1a1aa; font-size: 13px; max-width: 560px; }
+    table.data { width: 100%; border-collapse: collapse; }
+    table.data th { text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); padding: 8px 12px; border-bottom: 1px solid var(--color-border); }
+    table.data td { padding: 14px 12px; border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+    table.data tr.removed { background: var(--status-removed); opacity: .88; }
+    .weight { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sum-ok { color: var(--status-sync); font-weight: 700; }
+    .stream-lock { background: #f4f4f5; padding: 10px 14px; color: var(--color-text-muted); font-size: 12px; margin-bottom: 16px; border-left: 3px solid var(--color-text-muted); }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+    .footer-actions { display: flex; justify-content: space-between; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--color-border); }
+    .view { display: none; }
+    .view.active { display: block; }
+    .modal-backdrop {
+      display: none;
+      position: fixed; inset: 0; background: rgba(0,0,0,.55); align-items: center; justify-content: center; z-index: 100;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal { background: var(--color-surface); max-width: 440px; width: 90%; padding: 28px; box-shadow: 0 16px 48px rgba(0,0,0,.2); border-radius: var(--radius-sm); }
+    .modal h2 { margin: 0 0 8px; font-size: 18px; }
+    .modal-dl { font-size: 13px; margin: 16px 0; line-height: 1.6; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px; }
+    .recent-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border: 1px solid var(--color-border); margin-bottom: 8px; cursor: pointer; }
+    .recent-item:hover { border-color: var(--color-accent); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo">
+      <div class="logo-cube" aria-hidden="true"></div>
+      LEGKO <span>×</span> KEITARO
+    </div>
+    <nav class="nav-demo" aria-label="Демо экранов">
+      <a href="#" class="active" data-view="home">Главная</a>
+      <a href="#" data-view="create">Создать</a>
+      <a href="#" data-view="editor">Редактор</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section id="view-home" class="view active">
+      <div class="hero-strip">
+        <h1>Сплит офферов — сначала здесь</h1>
+        <p>Симулятор ротации до выкладки в Keitaro. Инструмент агентства «Это Легко».</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h2 style="margin:0 0 16px;font-size:16px">Новая кампания</h2>
+          <p style="color:var(--color-text-muted);font-size:13px;margin:0 0 20px">Шаблон: geo → Google, ротация офферов</p>
+          <button type="button" class="btn-primary" data-goto="create">Создать кампанию</button>
+        </div>
+        <div class="card">
+          <label class="field-label">Открыть по ID Keitaro</label>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <input class="field" placeholder="Campaign ID" />
+            <button type="button" class="btn-secondary">Open</button>
+          </div>
+          <p class="field-label" style="margin-top:24px">Недавние</p>
+          <div class="recent-item" data-goto="editor">
+            <span><strong>AU Test 11/19</strong> · #8812</span>
+            <span class="badge badge-draft">Черновик</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-create" class="view">
+      <h1 style="font-size:22px;margin:0 0 24px">Новая кампания</h1>
+      <article class="card">
+        <div class="grid-2">
+          <div>
+            <label class="field-label">Название</label>
+            <input class="field" value="AU Test 11/19" />
+            <label class="field-label" style="margin-top:16px">Geo (ISO-2)</label>
+            <input class="field" style="max-width:120px" value="AU" />
+            <label class="field-label" style="margin-top:16px">Оффер</label>
+            <input class="field" placeholder="Поиск по имени или ID" value="Offer #42" />
+          </div>
+          <div>
+            <div class="preview-dashed">
+              <strong style="text-transform:uppercase;font-size:11px;color:var(--color-text-muted)">Превью</strong><br />
+              Поток 1: <strong>AU</strong> → Google<br />
+              Поток 2: остальное → <strong>Offer #42</strong> (100%)
+            </div>
+            <p style="font-size:12px;color:var(--color-text-muted);margin-top:16px">
+              Domain · Group · Source — из конфига компании
+            </p>
+            <button type="button" class="btn-primary" style="margin-top:20px;width:100%" data-goto="editor">Создать</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section id="view-editor" class="view">
+      <div class="toolbar">
+        <div>
+          <p style="margin:0 0 4px;color:var(--color-text-muted);font-size:12px">Кампания</p>
+          <h1 style="margin:0;font-size:20px;display:inline">AU Test 11/19</h1>
+          <span class="badge badge-draft" style="margin-left:12px">Черновик</span>
+        </div>
+        <button type="button" class="btn-secondary">Fetch Streams</button>
+      </div>
+      <p style="font-size:12px;color:var(--color-text-muted);margin:0 0 20px">
+        https://tlgk.host/… · ID 8812 · Domain / Group / Source
+      </p>
+      <div class="stream-lock">🔒 Служебный поток (geo) — не редактируется</div>
+      <article class="card card--draft">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <strong>Ротация офферов</strong>
+          <span class="sum-ok">Σ 100%</span>
+        </div>
+        <table class="data">
+          <thead><tr><th>Оффер</th><th>Вес</th><th>Pin</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>Offer A <span style="color:var(--color-text-muted)">#1</span></td><td class="weight">40</td><td>🔒</td><td><a href="#">Remove</a></td></tr>
+            <tr><td>Offer B <span style="color:var(--color-text-muted)">#2</span></td><td class="weight">35</td><td>—</td><td><a href="#">Remove</a></td></tr>
+            <tr><td>Offer C <span style="color:var(--color-text-muted)">#3</span></td><td class="weight">25</td><td>—</td><td><a href="#">Remove</a></td></tr>
+            <tr class="removed"><td>Offer D <span style="color:var(--color-text-muted)">#4</span></td><td class="weight">0</td><td>—</td><td><a href="#">Bring back</a></td></tr>
+          </tbody>
+        </table>
+        <div style="display:flex;gap:8px;margin-top:16px">
+          <input class="field" placeholder="Добавить оффер…" />
+          <button type="button" class="btn-secondary">Добавить</button>
+        </div>
+        <div class="footer-actions">
+          <button type="button" class="btn-secondary">Cancel</button>
+          <button type="button" class="btn-primary" id="open-push">Push to Keitaro</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="modal" role="dialog" aria-labelledby="modal-title">
+    <div class="modal">
+      <h2 id="modal-title">Выложить в Keitaro?</h2>
+      <p style="margin:0;color:var(--color-text-muted);font-size:13px">Проверьте изменения</p>
+      <div class="modal-dl">
+        <strong>Убрать:</strong> Offer D<br />
+        <strong>Веса:</strong> A 33%→40%, B 33%→35%, C 33%→25%
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="close-push">Отмена</button>
+        <button type="button" class="btn-primary">Подтвердить Push</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function show(id) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + id).classList.add('active');
+      document.querySelectorAll('.nav-demo a').forEach(a => {
+        a.classList.toggle('active', a.dataset.view === id);
+      });
+    }
+    document.querySelectorAll('[data-goto]').forEach(el => {
+      el.addEventListener('click', () => show(el.dataset.goto));
+    });
+    document.querySelectorAll('.nav-demo a').forEach(a => {
+      a.addEventListener('click', e => { e.preventDefault(); show(a.dataset.view); });
+    });
+    document.getElementById('open-push').addEventListener('click', () => document.getElementById('modal').classList.add('open'));
+    document.getElementById('close-push').addEventListener('click', () => document.getElementById('modal').classList.remove('open'));
+  </script>
+</body>
+</html>

@@ -1,51 +1,65 @@
 # Роли агентов Legko
 
-> **Статус:** инфраструктура скопирована из Gloom (2026-11-19). Суть роли — в `ProjectDocs/roles/<role>.md`, адаптеры (`.claude/agents/<role>.md`) только маршрутизируют и задают tools.
+> **Статус:** актуален (2026-11-19). Процесс до кода — [`PlanDocs/28-pre-implementation-process.md`](../../PlanDocs/28-pre-implementation-process.md). **Project-manager в Legko не используется.**
 
 ## Слои
 
 | Слой | Путь | Назначение |
 | --- | --- | --- |
-| Конституция | `AGENTS.md` | Продукт, метрики, процесс |
-| Индекс памяти | `PlanDocs/README.md` | Замысел продукта, по нему делается реализация |
-| Технические спеки | `openspec/README.md` | Как система работает: `specs/` и активные `changes/` |
-| Бизнес-база | `ProductDocs/README.md` | Как продукт работает сейчас, для владельцев и сотрудников |
-| Роль | `ProjectDocs/roles/<role>.md` | Миссия, гейты, «не делать», чтение по задаче |
-| Субагент Claude Code | `.claude/agents/<role>.md` | `name`, `description`, `tools` + короткое тело |
-
-Правило: меняешь поведение роли — правишь файл роли; меняешь только маршрутизацию или tools — правишь адаптер.
+| Конституция | `AGENTS.md` | Продукт, память, процесс |
+| Процесс до реализации | `PlanDocs/28-pre-implementation-process.md` | Фазы A–F, точка готовности |
+| Индекс памяти | `PlanDocs/README.md` | Замысел продукта |
+| Технические спеки | `openspec/README.md` | После начала реализации |
+| Бизнес-база | `ProductDocs/README.md` | «Как есть» после changes |
+| Роль | `ProjectDocs/roles/<role>.md` | Миссия, гейты, чтение |
+| Субагент | `.claude/agents/<role>.md` | Маршрутизация и tools |
 
 ## Иерархия правды
 
-1. `AGENTS.md` (конституция) → 2. `PlanDocs/` (замысел) → 3. `openspec/specs/` (норма поведения после archive) → 4. `ProjectDocs/roles/<role>.md` → 5. адаптеры. При конфликте выше побеждает. `ProductDocs/` — производное описание для бизнеса: расходится со спекой — исправляют страницу.
+`AGENTS.md` → `PlanDocs/` → `openspec/specs/` → роли → адаптеры. `ProductDocs/` — производное для бизнеса.
 
-## Чтение контекста
-
-T0 — `AGENTS.md`; T1 — файл роли; T2 — файлы из «Обязательного чтения» роли для этой задачи; T3 — справочники по триггеру. Не читать весь `PlanDocs` целиком.
-
-## Роли
-
-| Роль | Когда вызывать |
-| --- | --- |
-| product | Приоритеты, scope, экономика, гейты 1/4, Outcome Check |
-| **project-manager** | Задачи и статусы в task-системе, ежедневный статус, недельный отчёт владельцу с часами |
-| designer | UX/UI, дизайн-система, ревью интерфейса |
-| content-manager | Тексты интерфейса, помощь, правила, промо-копирайт |
-| developer | Реализация по спеке |
-| spec-verifier | Сверка кода со спекой |
-| code-reviewer | Ревью diff по scope_files |
-| security-reviewer | change-гейт и audit (платежи, коины, выплаты, видео, PII) |
-| qa | Проверка по acceptance criteria, пост-деплой |
-| seo | SEO + AEO, срез трафика |
-| marketing | Привлечение зрителей и креаторов, фестивали и сейлы |
-
-## Поток разработки
+## Поток Legko (без PM)
 
 ```text
-product (гейт 1) → project-manager заводит задачи → developer
-  → /verify-change: spec-verifier → code-reviewer ∥ security-reviewer → qa → spec-verifier (docs-sync)
-  → seo (публичные страницы) → product (гейт 4) → релиз → qa пост-деплой → /opsx:archive → Outcome Check
-project-manager: статусы на каждом шаге, ежедневный статус, недельный отчёт
+До реализации (фазы A–E):
+  product (ценность, функционал, фичи)
+    → designer (облик)
+    → product (детальный разрез)
+    → developer (стек + архитектура)
+  → точка готовности §6 в PlanDocs/28
+
+Реализация (фаза F):
+  product (гейт 1 на change) → developer → /verify-change → релиз → /opsx:archive
 ```
 
-Различие с AgentPoint: добавлен **project-manager**; в verify добавлен гейт **docs-sync** (ProductDocs). OpenSpec подключён 2026-11-04 (рецепт — [`openspec-gates.md`](openspec-gates.md)); скрипты проверок `verify:*` и замок на push появятся с кодом.
+Планирование этапов: **владелец + product** в `PlanDocs/25-mvp-plan.md` и OpenSpec, без отдельной task-системы.
+
+## Активные роли (предача и MVP)
+
+| Роль | Когда |
+| --- | --- |
+| **product** | Фазы A, B, D; гейт 1; Outcome Check |
+| **designer** | Фаза C |
+| **developer** | Фаза E; реализация |
+
+## Роли после старта кода
+
+| Роль | Когда |
+| --- | --- |
+| developer | Реализация по спеке |
+| spec-verifier | Сверка со спекой |
+| code-reviewer | Ревью diff |
+| security-reviewer | Keitaro API, секреты, auth (когда появится) |
+| qa | Acceptance criteria |
+
+## Не используем в Legko
+
+| Роль / путь | Причина |
+| --- | --- |
+| **project-manager** | Решение владельца; план в PlanDocs |
+| marketing, seo, content-manager | Не нужны для тестового |
+| `ProjectDocs/pm/` | Не ведём статусы в Jira |
+
+## Поток OpenSpec (фаза F)
+
+Порядок гейтов: [`openspec-gates.md`](openspec-gates.md).

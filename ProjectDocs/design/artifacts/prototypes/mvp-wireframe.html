@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Legko MVP — wireframe</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --card: #fff;
+      --border: #e4e4e7;
+      --amber: #f59e0b;
+      --amber-bg: #fffbeb;
+      --green: #16a34a;
+      --muted: #71717a;
+      --removed: #f4f4f5;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: var(--bg); margin: 0; padding: 24px; color: #18181b; }
+    h1 { font-size: 1.25rem; margin: 0 0 8px; }
+    .subtitle { color: var(--muted); margin-bottom: 24px; font-size: 0.9rem; }
+    nav a { margin-right: 16px; color: #2563eb; }
+  </style>
+</head>
+<body>
+  <p class="subtitle">Wireframe Legko MVP · <a href="#home">Home</a> · <a href="#creator">Creator</a> · <a href="#editor">Editor</a> · <a href="#push">Push diff</a></p>
+
+  <section id="home" style="max-width:640px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:32px">
+    <h1>Legko</h1>
+    <p style="color:var(--muted)">Настройте сплит офферов до выкладки в Keitaro</p>
+    <button style="background:#18181b;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;margin:16px 0">Создать кампанию</button>
+    <hr style="border:none;border-top:1px solid var(--border);margin:20px 0" />
+    <label style="font-size:0.85rem;color:var(--muted)">Открыть по ID Keitaro</label>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input placeholder="Campaign ID" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px" />
+      <button style="padding:8px 16px;border:1px solid var(--border);background:#fff;border-radius:6px">Open</button>
+    </div>
+    <p style="font-size:0.85rem;margin-top:20px;color:var(--muted)">Недавние</p>
+    <ul style="list-style:none;padding:0;margin:8px 0 0">
+      <li style="padding:10px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px;display:flex;justify-content:space-between">
+        <span>Test AU offer 42</span>
+        <span style="font-size:0.75rem;padding:2px 8px;background:var(--amber-bg);color:#b45309;border-radius:99px">Черновик</span>
+      </li>
+    </ul>
+  </section>
+
+  <section id="creator" style="max-width:640px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:32px">
+    <h1>Новая кампания</h1>
+    <div style="margin:12px 0"><label style="font-size:0.8rem;color:var(--muted)">Название</label><input style="width:100%;padding:8px;margin-top:4px;border:1px solid var(--border);border-radius:6px" /></div>
+    <div style="margin:12px 0"><label style="font-size:0.8rem;color:var(--muted)">Geo (ISO-2)</label><input style="width:80px;padding:8px;margin-top:4px;border:1px solid var(--border);border-radius:6px" value="AU" /></div>
+    <div style="margin:12px 0"><label style="font-size:0.8rem;color:var(--muted)">Оффер</label><input style="width:100%;padding:8px;margin-top:4px;border:1px solid var(--border);border-radius:6px" placeholder="Поиск по имени или ID" /></div>
+    <div style="background:#f8fafc;border:1px dashed var(--border);padding:12px;border-radius:6px;font-size:0.9rem;margin:16px 0">
+      <strong>Превью:</strong> Поток 1: AU → Google · Поток 2: остальное → Offer #123
+    </div>
+    <p style="font-size:0.8rem;color:var(--muted)">Домен · Группа · Источник — из конфига (read-only)</p>
+    <button style="background:#18181b;color:#fff;border:none;padding:10px 20px;border-radius:6px;margin-top:8px">Создать</button>
+  </section>
+
+  <section id="editor" style="max-width:960px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:32px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+      <div>
+        <span style="color:var(--muted);font-size:0.85rem">← Home</span>
+        <h1 style="margin:4px 0">Test AU · #8812</h1>
+        <span style="font-size:0.75rem;padding:4px 10px;background:var(--amber-bg);color:#b45309;border-radius:99px">Черновик</span>
+      </div>
+      <button style="padding:8px 16px;border:1px solid var(--border);background:#fff;border-radius:6px">Fetch Streams</button>
+    </div>
+    <p style="font-size:0.85rem;color:var(--muted)">https://tlgk.host/... · Domain X / Group Y / Source Z</p>
+    <p style="font-size:0.85rem;color:var(--muted);padding:8px;background:#f4f4f5;border-radius:4px;margin:16px 0">🔒 Служебный поток (geo) — не редактируется</p>
+    <div style="border:3px solid var(--amber);border-radius:8px;padding:16px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+        <strong>Ротация офферов</strong>
+        <span style="font-size:0.75rem;color:#b45309">Жёлтый — не в Keitaro</span>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem">
+        <thead><tr style="text-align:left;color:var(--muted);font-size:0.75rem"><th>Оффер</th><th>Вес %</th><th>Pin</th><th></th></tr></thead>
+        <tbody>
+          <tr style="border-top:1px solid var(--border)"><td>Offer A <small>#1</small></td><td><strong>25</strong></td><td>🔒</td><td><a href="#">Remove</a></td></tr>
+          <tr style="border-top:1px solid var(--border)"><td>Offer B <small>#2</small></td><td><strong>25</strong></td><td>—</td><td><a href="#">Remove</a></td></tr>
+          <tr style="border-top:1px solid var(--border);background:var(--removed);opacity:0.7"><td>Offer C <small>#3</small></td><td>0</td><td>—</td><td><a href="#">Bring back</a></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:12px;display:flex;gap:8px"><input placeholder="Добавить оффер…" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px" /><button>Добавить</button></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:24px">
+      <button style="padding:10px 16px;border:1px solid var(--border);background:#fff;border-radius:6px">Cancel</button>
+      <button style="padding:10px 20px;background:#18181b;color:#fff;border:none;border-radius:6px">Push to Keitaro</button>
+    </div>
+  </section>
+
+  <section id="push" style="max-width:480px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.08)">
+    <h1 style="font-size:1.1rem">Выложить в Keitaro?</h1>
+    <p style="font-size:0.85rem;color:var(--muted)">Проверьте изменения</p>
+    <div style="font-size:0.9rem;margin:16px 0"><strong>Добавить:</strong> Offer D</div>
+    <div style="font-size:0.9rem;margin:16px 0"><strong>Убрать:</strong> Offer C</div>
+    <div style="font-size:0.9rem;margin:16px 0"><strong>Веса:</strong> A 33%→25%, B 33%→25%, D 0%→25%</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px">
+      <button style="padding:8px 16px;border:1px solid var(--border);background:#fff;border-radius:6px">Отмена</button>
+      <button style="padding:8px 16px;background:var(--green);color:#fff;border:none;border-radius:6px">Подтвердить Push</button>
+    </div>
+  </section>
+</body>
+</html>

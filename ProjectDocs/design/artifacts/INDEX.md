@@ -1,12 +1,10 @@
-# Реестр артефактов дизайна
+# Реестр артефактов дизайна (Legko)
 
-| Путь | Назначение | Статус | Обновлён | Публикация (URL) | Связанные документы |
-| --- | --- | --- | --- | --- | --- |
-| `../brand-brief.md` | Бренд-бриф: вход для концепт-раунда | черновик | 2026-11-03 | — | `PlanDocs/interview/05-meeting-1-questions.md`, `PlanDocs/00-product-overview.md` |
-| `prototypes/concept-a/index.html` | Концепт A «Тихий кинозал»: 5 экранов | черновик | 2026-11-03 | https://claude.ai/artifact/TUdKzYPaJd1AnrJkxs93kz | `ProjectDocs/design/concept-round-notes.md` |
-| `prototypes/concept-b/index.html` | Концепт B «После полуночи»: 5 экранов | черновик | 2026-11-03 | https://claude.ai/artifact/SL8UzwHjVUT899cPAdYohs | `ProjectDocs/design/concept-round-notes.md` |
-| `prototypes/concept-c/index.html` | Концепт C «Фиолетовый час» (развитие демо): 5 экранов | черновик | 2026-11-03 | https://claude.ai/artifact/F8DoK3p6FjViPbLcMWJDfS | `ProjectDocs/design/concept-round-notes.md` |
-| `prototypes/concept-d/index.html` | Концепт D «Порог»: 5 экранов | черновик | 2026-11-03 | https://claude.ai/artifact/6qd9dUkre9giXchGnwvPHY | `ProjectDocs/design/concept-round-notes.md` |
-| `prototypes/concept-e/index.html` | Концепт E «Дневной фиолетовый» (светлый, по просьбе владельца): 5 экранов | черновик | 2026-11-04 | https://claude.ai/artifact/SD9cUahmgtnJrAPtT53na2 | `ProjectDocs/design/concept-round-notes.md` |
-| `prototypes/_build/gen_concepts.py` | Скрипт сборки концептов A–E (правки — здесь, затем пересборка) | черновик | 2026-11-03 | — | `ProjectDocs/design/concept-round-notes.md` |
-| `../concept-round-notes.md` | Описание направлений A–E, обратная связь по встрече 2 и предварительное решение | черновик | 2026-11-03 | — | `ProjectDocs/design/concept-round.md` |
+| Путь | Назначение | Статус | Обновлён | Связанные документы |
+| --- | --- | --- | --- | --- |
+| `../brand-brief.md` | Бренд etolegko.ru | актуален | 2026-11-19 | `design-system.md` |
+| `../design-system.md` | Токены и компоненты | актуален | 2026-11-19 | `ux-principles.md` |
+| `../ux-principles.md` | UX и аналоги рынка | актуален | 2026-11-19 | `mvp-ui-spec.md` |
+| `prototypes/legko-corporate-prototype.html` | **Эталон MVP** (Home/Create/Editor) | актуален | 2026-11-19 | `design-system.md` |
+| `prototypes/legko-tokens.css` | CSS tokens для кода | актуален | 2026-11-19 | `design-system.md` §1 |
+| `prototypes/mvp-wireframe.html` | Ранний wireframe | устарел | 2026-11-19 | заменён corporate |

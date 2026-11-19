@@ -8,16 +8,14 @@ Legko — обёртка над [Keitaro](https://keitaro.io) для управ�
 
 - `PlanDocs/` — замысел («зачем и что»), по нему делается реализация. Начинать с `PlanDocs/README.md`.
 - `openspec/` — технические спеки («как работает»): `specs/` после archive и активные `changes/`. Индекс — `openspec/README.md`.
-- `ProductDocs/` — бизнес-база знаний: как продукт работает **сейчас**, простым языком. Обновляется в каждом change. Индекс — `ProductDocs/README.md`.
+- `ProductDocs/` — бизнес-база знаний: как продукт работает **сейчас**; обновляется в каждом change; **в MVP отдаётся пользователю на `/docs`**. Индекс — `ProductDocs/README.md`. См. `PlanDocs/32-product-docs-in-app.md`.
 - `ProjectDocs/roles/` — роли агентов; `.claude/agents/` — адаптеры субагентов.
-- `ProjectDocs/design/` — бренд, голос, дизайн-система; `ProjectDocs/design/artifacts/` — прототипы и референсы в репозитории.
-- `ProjectDocs/pm/` — рабочая память project-manager (статусы, отчёты).
-
+- `ProjectDocs/design/` — бренд, **design-system.md**, **ux-principles.md**; `artifacts/prototypes/legko-corporate-prototype.html` — эталон UI. Все итерации UI — только компоненты из design-system.
 ## 3. Процесс
 
-Поток и роли — `ProjectDocs/roles/README.md`.
+**До кода:** фазы A–F в `PlanDocs/28-pre-implementation-process.md` (product → designer → product → developer → план этапов). **Project-manager не используется.**
 
-Каждое изменение — OpenSpec change (`npx @fission-ai/openspec@latest <команда>`): `/opsx:propose` → `/opsx:apply` → `/verify-change <slug>` → релиз → `/opsx:archive`. Порядок, гейты и замок — `ProjectDocs/roles/openspec-gates.md`.
+**После точки готовности §28:** OpenSpec change — `/opsx:propose` → `/opsx:apply` → `/verify-change <slug>` → `/opsx:archive`. Гейты — `ProjectDocs/roles/openspec-gates.md`. Роли — `ProjectDocs/roles/README.md`.
 
 ## 4. Правила
 
@@ -29,4 +27,4 @@ Legko — обёртка над [Keitaro](https://keitaro.io) для управ�
 
 ## 5. Технический стек
 
-Стек выбирается на этапе проработки и фиксируется в `PlanDocs/15-architecture.md` (файл появится в PlanDocs). До фиксации не придумывать технологии в design.md change.
+**FastAPI**, **SQLAlchemy 2**, **Alembic**, **SQLite**, **Jinja2**, **HTMX**, **httpx** → Keitaro. Детали и модули — `PlanDocs/15-architecture.md`, `openspec/project.md`.

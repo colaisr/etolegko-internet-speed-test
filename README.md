@@ -10,7 +10,9 @@
 | [`PlanDocs/`](PlanDocs/README.md) | Замысел продукта (сейчас пустой каталог) |
 | [`ProductDocs/`](ProductDocs/README.md) | Как продукт работает сейчас (пусто) |
 | [`openspec/`](openspec/README.md) | Технические спеки и changes |
-| [`ProjectDocs/`](ProjectDocs/roles/README.md) | Роли агентов, PM, дизайн-артефакты |
+| [`ProjectDocs/`](ProjectDocs/roles/README.md) | Роли агентов, дизайн-артефакты |
+| [`PlanDocs/28-pre-implementation-process.md`](PlanDocs/28-pre-implementation-process.md) | Фазы до реализации (без PM) |
+| [`PlanDocs/33-implementation-work-plan.md`](PlanDocs/33-implementation-work-plan.md) | **Реализация: 8 changes, чеклисты** |
 
 ## Агенты и OpenSpec
 

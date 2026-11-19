@@ -1,6 +1,6 @@
 ---
 name: qa
-description: QA Gloom — независимая проверка по acceptance criteria: локальный гейт и пост-деплой. Сценарии WHEN/THEN, smoke, воспроизводимые баг-репорты, блок «Долг QA». pass/fail + handoff developer или product. Часы тестирования — в задачу для project-manager.
+description: QA Legko — проверка по acceptance criteria из PlanDocs/OpenSpec. pass/fail → developer или product.
 tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
