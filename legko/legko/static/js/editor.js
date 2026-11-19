@@ -70,8 +70,66 @@ function bindEditorFetchLoading() {
   });
 }
 
+function bindEditorPushModal() {
+  const openBtn = document.getElementById("editor-open-push");
+  const backdrop = document.getElementById("editor-push-backdrop");
+  const body = document.getElementById("editor-push-modal-body");
+  if (!openBtn || !backdrop || !body || openBtn.dataset.legkoBound === "1") return;
+  openBtn.dataset.legkoBound = "1";
+
+  const closeModal = () => {
+    backdrop.hidden = true;
+    backdrop.classList.remove("modal-backdrop--open");
+    document.body.classList.remove("modal-open");
+    body.innerHTML = "";
+  };
+
+  const bindCloseHandlers = () => {
+    backdrop.querySelectorAll("[data-editor-push-close]").forEach((el) => {
+      el.addEventListener("click", closeModal);
+    });
+  };
+
+  backdrop.addEventListener("click", (event) => {
+    if (event.target === backdrop) closeModal();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !backdrop.hidden) closeModal();
+  });
+
+  openBtn.addEventListener("click", async () => {
+    const url = openBtn.getAttribute("data-push-preview-url");
+    if (!url || openBtn.disabled) return;
+    body.innerHTML = '<p class="text-muted">Загружаем diff…</p>';
+    backdrop.hidden = false;
+    backdrop.classList.add("modal-backdrop--open");
+    document.body.classList.add("modal-open");
+    try {
+      const response = await fetch(url, { headers: { Accept: "text/html" } });
+      const htmlText = await response.text();
+      if (!response.ok) {
+        body.innerHTML = htmlText;
+        bindCloseHandlers();
+        return;
+      }
+      body.innerHTML = htmlText;
+      bindCloseHandlers();
+      const form = body.querySelector(".push-confirm-form");
+      form?.addEventListener("submit", () => {
+        const submit = form.querySelector('button[type="submit"]');
+        if (submit) submit.disabled = true;
+      });
+    } catch {
+      body.innerHTML = '<p class="alert alert-error">Не удалось загрузить diff</p>';
+      bindCloseHandlers();
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   bindEditorAddOffer();
   bindEditorCopyUrl();
   bindEditorFetchLoading();
+  bindEditorPushModal();
 });

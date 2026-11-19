@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Экран редактора кампании: загрузка потоков из Keitaro (Fetch), отображение служебного потока и read-only таблицы офферов.
+Экран редактора кампании: загрузка потоков из Keitaro (Fetch), отображение служебного потока и таблицы офферов.
 
 ## Requirements
 
@@ -27,7 +27,7 @@ The system SHALL reload streams and offer rows from Keitaro via `POST /campaigns
 #### Scenario: Fetch succeeds
 
 - **WHEN** the user submits Fetch and Keitaro responds
-- **THEN** local streams mirror Keitaro and sync status becomes synced
+- **THEN** local streams mirror Keitaro and sync status becomes synced when there is no draft
 
 #### Scenario: Fetch fails
 
@@ -42,3 +42,22 @@ The system SHALL run full_fetch automatically after successful campaign create w
 
 - **WHEN** the user opens the editor after create
 - **THEN** offer and service streams are usually already present without manual Fetch
+
+### Requirement: Draft-preserving fetch (F7)
+
+When the offer stream has `has_draft`, the system SHALL merge Keitaro stream data instead of replacing local offer rows: service streams may refresh; local unpushed adds remain; offers that were active in the published snapshot but are missing from Keitaro become **removed**.
+
+#### Scenario: Drift marks removed
+
+- **WHEN** the user runs Fetch with a draft and Keitaro no longer lists an offer that was active in the published snapshot
+- **THEN** that local row becomes removed and active weights are recalculated
+
+#### Scenario: Local add survives fetch
+
+- **WHEN** the user added an offer only locally (not in the published snapshot) and runs Fetch
+- **THEN** that row stays active even if Keitaro does not list it yet
+
+#### Scenario: No draft replaces
+
+- **WHEN** `has_draft` is false
+- **THEN** Fetch replaces local streams from Keitaro and updates the published snapshot

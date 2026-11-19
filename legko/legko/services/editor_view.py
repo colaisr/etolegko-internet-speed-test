@@ -43,6 +43,18 @@ def editor_context(campaign: Campaign) -> dict:
     )
     geo = (campaign.geo_code or "…").upper()
     weights_valid = active_sum == 100 and active_count > 0
+    offer_stream_draft = bool(offer_stream and offer_stream.has_draft)
+    can_push = offer_stream_draft and weights_valid
+    can_cancel = offer_stream_draft
+
+    push_disabled_reason: str | None = None
+    if not offer_stream_draft:
+        push_disabled_reason = "Нет изменений"
+    elif not weights_valid:
+        if active_count == 0:
+            push_disabled_reason = "Нет активных офферов"
+        else:
+            push_disabled_reason = f"Сумма весов: {active_sum}% (нужно 100%)"
 
     return {
         "campaign": campaign,
@@ -51,9 +63,12 @@ def editor_context(campaign: Campaign) -> dict:
         "offers": offers,
         "has_streams": bool(streams),
         "needs_fetch_cta": not streams,
-        "offer_stream_draft": bool(offer_stream and offer_stream.has_draft),
+        "offer_stream_draft": offer_stream_draft,
         "active_weight_sum": active_sum,
         "active_offer_count": active_count,
         "weights_valid": weights_valid,
+        "can_push": can_push,
+        "can_cancel": can_cancel,
+        "push_disabled_reason": push_disabled_reason,
         "service_stream_label": f"Служебный поток ({geo} → Google)",
     }

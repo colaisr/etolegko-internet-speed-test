@@ -1,0 +1,57 @@
+<div class="modal-panel modal-panel--push">
+  <h2 class="modal-title" id="editor-push-modal-title">Выложить в Keitaro?</h2>
+  <p class="text-muted text-muted--compact">Проверьте, что уйдёт в ротацию потока.</p>
+
+  <p class="push-diff-empty text-muted" {% if not diff.is_empty %}hidden{% endif %}>
+    Изменений в активном сплите не обнаружено — Push обновит Keitaro тем же составом.
+  </p>
+
+  {% if diff.adds %}
+  <div class="push-diff-block">
+    <h3 class="push-diff-heading">Добавить</h3>
+    <ul class="push-diff-list">
+      {% for row in diff.adds %}
+      <li>
+        <span class="push-diff-name">{{ row.offer_name }}</span>
+        <span class="tabular-nums text-muted">#{{ row.keitaro_offer_id }} · {{ row.weight_percent }}%</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if diff.removes %}
+  <div class="push-diff-block">
+    <h3 class="push-diff-heading">Убрать из Keitaro</h3>
+    <ul class="push-diff-list">
+      {% for row in diff.removes %}
+      <li>
+        <span class="push-diff-name">{{ row.offer_name }}</span>
+        <span class="tabular-nums text-muted">#{{ row.keitaro_offer_id }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if diff.weight_changes %}
+  <div class="push-diff-block">
+    <h3 class="push-diff-heading">Изменить веса</h3>
+    <ul class="push-diff-list">
+      {% for row in diff.weight_changes %}
+      <li>
+        <span class="push-diff-name">{{ row.offer_name }}</span>
+        <span class="tabular-nums">{{ row.before }}% → {{ row.after }}%</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <form method="post" action="/campaigns/{{ campaign.id }}/push" class="push-confirm-form">
+    <div class="modal-actions field-row field-row--actions">
+      <button type="button" class="btn-secondary" data-editor-push-close>Отмена</button>
+      <button type="submit" class="btn-primary">Подтвердить Push</button>
+    </div>
+  </form>
+</div>

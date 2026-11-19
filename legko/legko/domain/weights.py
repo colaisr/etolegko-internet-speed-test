@@ -41,6 +41,9 @@ def recalculate_weights(slots: list[WeightInput]) -> dict[str, int]:
     result: dict[str, int] = {}
     active = [s for s in slots if s.active]
 
+    if not active:
+        return {slot.key: 0 for slot in slots}
+
     pinned_weights: dict[str, int] = {}
     pinned_sum = 0
     for slot in active:

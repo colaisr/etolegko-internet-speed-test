@@ -1,0 +1,10 @@
+{
+  "gate": "docs-sync",
+  "change": "stream-editor-publish",
+  "round": 1,
+  "verdict": "pass",
+  "reviewed_at": "2026-11-19T09:30:00.000Z",
+  "pages": ["ProductDocs/02-stream-offer-editor.md", "ProductDocs/README.md"],
+  "planDocsMarked": [],
+  "findings": []
+}

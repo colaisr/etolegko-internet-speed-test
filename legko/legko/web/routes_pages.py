@@ -1,3 +1,4 @@
+import html
 import uuid
 from typing import Annotated
 
@@ -36,6 +37,7 @@ from legko.services.offer_editor import (
     restore_offer,
     set_pin,
 )
+from legko.services.publish import PublishError, cancel_draft, push_preview, push_to_keitaro
 from legko.services.campaign_search import search_keitaro_campaigns
 from legko.services.offer_search import search_keitaro_offers
 from legko.settings import get_settings
@@ -440,6 +442,8 @@ def _editor_template_context(
     *,
     fetch_error: str | None = None,
     op_error: str | None = None,
+    push_error: str | None = None,
+    push_ok: bool = False,
 ) -> dict:
     ctx = editor_context(campaign)
     return {
@@ -449,6 +453,8 @@ def _editor_template_context(
         "pill_class": sync_status_pill_class(campaign.sync_status),
         "fetch_error": fetch_error,
         "op_error": op_error,
+        "push_error": push_error,
+        "push_ok": push_ok,
         **ctx,
     }
 
@@ -469,6 +475,8 @@ async def editor_page(
     db: Annotated[Session, Depends(get_db)],
     fetch_error: str | None = None,
     op_error: str | None = None,
+    push_error: str | None = None,
+    push_ok: int | None = None,
 ):
     campaign = load_campaign_for_editor(db, campaign_id)
     if campaign is None:
@@ -476,7 +484,13 @@ async def editor_page(
     return _templates(request).TemplateResponse(
         request=request,
         name="editor.html",
-        context=_editor_template_context(campaign, fetch_error=fetch_error, op_error=op_error),
+        context=_editor_template_context(
+            campaign,
+            fetch_error=fetch_error,
+            op_error=op_error,
+            push_error=push_error,
+            push_ok=bool(push_ok),
+        ),
     )
 
 
@@ -564,6 +578,68 @@ async def editor_pin_offer_row(
     except OfferEditorError as exc:
         return _editor_redirect(campaign_id, op_error=exc.user_message)
     return _editor_redirect(campaign_id)
+
+
+@router.get("/campaigns/{campaign_id}/push/preview", response_class=HTMLResponse)
+async def editor_push_preview(
+    request: Request,
+    campaign_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+):
+    try:
+        campaign, diff = push_preview(db, campaign_id)
+    except PublishError as exc:
+        safe = html.escape(exc.user_message)
+        return HTMLResponse(
+            f'<p class="alert alert-error" role="alert">{safe}</p>',
+            status_code=400,
+        )
+    return _templates(request).TemplateResponse(
+        request=request,
+        name="partials/push_modal.html",
+        context={"campaign": campaign, "diff": diff},
+    )
+
+
+@router.post("/campaigns/{campaign_id}/push", response_class=RedirectResponse)
+async def editor_push_confirm(
+    campaign_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+):
+    from urllib.parse import quote
+
+    settings = get_settings()
+    client = KeitaroClient(settings)
+    try:
+        await push_to_keitaro(db, client, campaign_id)
+    except PublishError as exc:
+        msg = quote(exc.user_message, safe="")
+        return RedirectResponse(
+            url=f"/campaigns/{campaign_id}/editor?push_error={msg}",
+            status_code=303,
+        )
+    return RedirectResponse(
+        url=f"/campaigns/{campaign_id}/editor?push_ok=1",
+        status_code=303,
+    )
+
+
+@router.post("/campaigns/{campaign_id}/cancel", response_class=RedirectResponse)
+async def editor_cancel_draft(
+    campaign_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+):
+    from urllib.parse import quote
+
+    try:
+        cancel_draft(db, campaign_id)
+    except PublishError as exc:
+        msg = quote(exc.user_message, safe="")
+        return RedirectResponse(
+            url=f"/campaigns/{campaign_id}/editor?op_error={msg}",
+            status_code=303,
+        )
+    return RedirectResponse(url=f"/campaigns/{campaign_id}/editor", status_code=303)
 
 
 @router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/unpin", response_class=RedirectResponse)

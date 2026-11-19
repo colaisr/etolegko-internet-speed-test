@@ -190,6 +190,26 @@ class KeitaroClient:
             return [row for row in data if isinstance(row, dict)]
         return []
 
+    async def get_stream(self, stream_id: int) -> dict:
+        response = await self._request_checked("GET", f"streams/{stream_id}")
+        data = response.json()
+        if not isinstance(data, dict):
+            raise KeitaroError("Keitaro: неожиданный ответ потока")
+        return data
+
+    async def update_stream_offers(
+        self,
+        stream_id: int,
+        offers: list[tuple[int, int]],
+    ) -> None:
+        """Replace active offers on a stream with offer_id → share % pairs."""
+        body = await self.get_stream(stream_id)
+        body["offers"] = [
+            {"offer_id": int(oid), "share": int(share), "state": "active"}
+            for oid, share in offers
+        ]
+        await self._request_checked("PUT", f"streams/{stream_id}", json=body)
+
     async def create_campaign_with_template(
         self,
         *,

@@ -54,6 +54,12 @@
   {% if op_error %}
   <p class="alert alert-error" role="alert">{{ op_error }}</p>
   {% endif %}
+  {% if push_error %}
+  <p class="alert alert-error" role="alert">{{ push_error }}</p>
+  {% endif %}
+  {% if push_ok %}
+  <p class="alert alert-success" role="status">Сплит выложен в Keitaro. Поток синхронизирован.</p>
+  {% endif %}
 
   {% if needs_fetch_cta %}
   <article class="card editor-empty-card">
@@ -214,12 +220,40 @@
       {% endif %}
     </div>
     <div class="editor-publish-actions">
-      <button type="button" class="btn-secondary" disabled aria-disabled="true">Отменить изменения</button>
-      <button type="button" class="btn-primary btn-primary--disabled" disabled aria-disabled="true" title="{% if not weights_valid %}Сначала доведите сумму до 100%{% elif not offer_stream_draft %}Нет изменений{% else %}Скоро{% endif %}">
+      <form method="post" action="/campaigns/{{ campaign.id }}/cancel" class="editor-cancel-form">
+        <button
+          type="submit"
+          class="btn-secondary"
+          {% if not can_cancel %}disabled aria-disabled="true" title="Нет черновика"{% endif %}
+        >
+          Отменить изменения
+        </button>
+      </form>
+      <button
+        type="button"
+        class="btn-primary{% if not can_push %} btn-primary--disabled{% endif %}"
+        id="editor-open-push"
+        data-push-preview-url="/campaigns/{{ campaign.id }}/push/preview"
+        {% if not can_push %}disabled aria-disabled="true" title="{{ push_disabled_reason or 'Push недоступен' }}"{% endif %}
+      >
         Push в Keitaro
       </button>
     </div>
   </footer>
+
+  <div
+    id="editor-push-backdrop"
+    class="modal-backdrop editor-push-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="editor-push-modal-title"
+    hidden
+  >
+    <div class="modal modal--wide editor-push-modal">
+      <button type="button" class="modal-close" data-editor-push-close aria-label="Закрыть">×</button>
+      <div id="editor-push-modal-body" class="editor-push-modal-body" aria-live="polite"></div>
+    </div>
+  </div>
   {% endif %}
 </section>
 {% endblock %}

@@ -35,6 +35,14 @@ def test_recalculate_pin_25_two_others():
     assert sorted([out["a"], out["b"]]) == [37, 38]
 
 
+def test_recalculate_no_active_all_zero():
+    slots = [
+        WeightInput("a", False, False, None, 100),
+    ]
+    out = recalculate_weights(slots)
+    assert out == {"a": 0}
+
+
 def test_removed_get_zero():
     slots = [
         WeightInput("a", True, False, None),

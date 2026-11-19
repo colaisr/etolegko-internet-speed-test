@@ -27,3 +27,7 @@ class Stream(Base):
 
     campaign: Mapped["Campaign"] = relationship(back_populates="streams")  # noqa: F821
     offers: Mapped[list["StreamOffer"]] = relationship(back_populates="stream")  # noqa: F821
+    published_snapshot: Mapped["StreamPublishedSnapshot | None"] = relationship(  # noqa: F821
+        back_populates="stream",
+        uselist=False,
+    )

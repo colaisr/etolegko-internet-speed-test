@@ -1,6 +1,6 @@
 # openspec — технические спеки и активные changes
 
-> **Статус:** активных changes нет. Следующий: `stream-editor-publish` (F5/F6). Замысел — [`PlanDocs/README.md`](../PlanDocs/README.md). Бизнес-описание — [`ProductDocs/README.md`](../ProductDocs/README.md).
+> **Статус:** активных changes нет. Следующий: `project-readme-delivery` (F8/F9). Замысел — [`PlanDocs/README.md`](../PlanDocs/README.md). Бизнес-описание — [`ProductDocs/README.md`](../ProductDocs/README.md).
 
 ## Активные changes
 
@@ -15,8 +15,9 @@ _(нет)_
 | `keitaro-client` | HTTP-адаптер Keitaro | `00-product-overview` |
 | `home-navigation` | Главная, open, недавние | `03-home-and-navigation` |
 | `campaign-creator` | Создатель шаблона, модалка | `01-campaign-creator` |
-| `stream-editor-fetch` | Редактор, Fetch, потоки | `02-stream-offer-editor` |
+| `stream-editor-fetch` | Редактор, Fetch, merge F7 | `02-stream-offer-editor` |
 | `stream-editor-offer-ops` | Add/remove/pin, пересчёт %, черновик | `02-stream-offer-editor` |
+| `stream-editor-publish` | Push, Cancel, diff, snapshot | `02-stream-offer-editor` |
 
 ## Archive
 
@@ -29,6 +30,8 @@ _(нет)_
 | `campaign-creator` | 2026-11-19 |
 | `stream-editor-fetch-ui` | 2026-11-19 |
 | `stream-editor-offer-ops` | 2026-11-19 |
+| `stream-editor-publish` | 2026-11-19 |
+| `stream-editor-resync` | 2026-11-19 |
 
 ## Связка с процессом
 
