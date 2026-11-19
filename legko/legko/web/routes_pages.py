@@ -468,6 +468,25 @@ def _editor_redirect(campaign_id: uuid.UUID, *, op_error: str | None = None) -> 
     return RedirectResponse(url=base, status_code=303)
 
 
+def _editor_after_offer_mutation(
+    request: Request,
+    db: Session,
+    campaign_id: uuid.UUID,
+    *,
+    op_error: str | None = None,
+) -> HTMLResponse | RedirectResponse:
+    campaign = load_campaign_for_editor(db, campaign_id)
+    if campaign is None:
+        return RedirectResponse(url="/?error=Кампания+не+найдена", status_code=303)
+    if _is_htmx(request):
+        return _templates(request).TemplateResponse(
+            request=request,
+            name="partials/editor_live_region.html",
+            context=_editor_template_context(campaign, op_error=op_error),
+        )
+    return _editor_redirect(campaign_id, op_error=op_error)
+
+
 @router.get("/campaigns/{campaign_id}/editor", response_class=HTMLResponse)
 async def editor_page(
     request: Request,
@@ -534,8 +553,9 @@ async def editor_add_offer(
     return _editor_redirect(campaign_id)
 
 
-@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/remove", response_class=RedirectResponse)
+@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/remove")
 async def editor_remove_offer_row(
+    request: Request,
     campaign_id: uuid.UUID,
     offer_row_id: uuid.UUID,
     db: Annotated[Session, Depends(get_db)],
@@ -543,12 +563,13 @@ async def editor_remove_offer_row(
     try:
         remove_offer(db, campaign_id, offer_row_id)
     except OfferEditorError as exc:
-        return _editor_redirect(campaign_id, op_error=exc.user_message)
-    return _editor_redirect(campaign_id)
+        return _editor_after_offer_mutation(request, db, campaign_id, op_error=exc.user_message)
+    return _editor_after_offer_mutation(request, db, campaign_id)
 
 
-@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/restore", response_class=RedirectResponse)
+@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/restore")
 async def editor_restore_offer_row(
+    request: Request,
     campaign_id: uuid.UUID,
     offer_row_id: uuid.UUID,
     db: Annotated[Session, Depends(get_db)],
@@ -556,12 +577,13 @@ async def editor_restore_offer_row(
     try:
         restore_offer(db, campaign_id, offer_row_id)
     except OfferEditorError as exc:
-        return _editor_redirect(campaign_id, op_error=exc.user_message)
-    return _editor_redirect(campaign_id)
+        return _editor_after_offer_mutation(request, db, campaign_id, op_error=exc.user_message)
+    return _editor_after_offer_mutation(request, db, campaign_id)
 
 
-@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/pin", response_class=RedirectResponse)
+@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/pin")
 async def editor_pin_offer_row(
+    request: Request,
     campaign_id: uuid.UUID,
     offer_row_id: uuid.UUID,
     db: Annotated[Session, Depends(get_db)],
@@ -572,12 +594,17 @@ async def editor_pin_offer_row(
         try:
             percent = int(pin_percent.strip())
         except ValueError:
-            return _editor_redirect(campaign_id, op_error="Pin % должен быть числом")
+            return _editor_after_offer_mutation(
+                request,
+                db,
+                campaign_id,
+                op_error="Pin % должен быть числом",
+            )
     try:
         set_pin(db, campaign_id, offer_row_id, enabled=True, percent=percent)
     except OfferEditorError as exc:
-        return _editor_redirect(campaign_id, op_error=exc.user_message)
-    return _editor_redirect(campaign_id)
+        return _editor_after_offer_mutation(request, db, campaign_id, op_error=exc.user_message)
+    return _editor_after_offer_mutation(request, db, campaign_id)
 
 
 @router.get("/campaigns/{campaign_id}/push/preview", response_class=HTMLResponse)
@@ -642,8 +669,9 @@ async def editor_cancel_draft(
     return RedirectResponse(url=f"/campaigns/{campaign_id}/editor", status_code=303)
 
 
-@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/unpin", response_class=RedirectResponse)
+@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/unpin")
 async def editor_unpin_offer_row(
+    request: Request,
     campaign_id: uuid.UUID,
     offer_row_id: uuid.UUID,
     db: Annotated[Session, Depends(get_db)],
@@ -651,6 +679,6 @@ async def editor_unpin_offer_row(
     try:
         set_pin(db, campaign_id, offer_row_id, enabled=False)
     except OfferEditorError as exc:
-        return _editor_redirect(campaign_id, op_error=exc.user_message)
-    return _editor_redirect(campaign_id)
+        return _editor_after_offer_mutation(request, db, campaign_id, op_error=exc.user_message)
+    return _editor_after_offer_mutation(request, db, campaign_id)
 

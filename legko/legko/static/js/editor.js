@@ -70,6 +70,63 @@ function bindEditorFetchLoading() {
   });
 }
 
+function parseWeightNumber(text) {
+  const n = parseInt(String(text || "").replace(/[^\d]/g, ""), 10);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function rowPreviewWeight(row) {
+  const pinInput = row.querySelector(".field--pin");
+  if (pinInput && pinInput.dataset.pinPreview === "1") {
+    const typed = parseInt(pinInput.value, 10);
+    if (Number.isFinite(typed)) return typed;
+  }
+  const lock = row.querySelector(".pin-lock");
+  if (lock) return parseWeightNumber(lock.textContent);
+  const cell = row.querySelector(".offer-cell-weight");
+  return parseWeightNumber(cell?.textContent);
+}
+
+function updateWeightSumPreview() {
+  const hero = document.getElementById("editor-weight-hero");
+  const valueEl = document.getElementById("editor-weight-sum-value");
+  if (!hero || !valueEl) return;
+
+  let sum = 0;
+  let activeCount = 0;
+  document.querySelectorAll(".offer-row:not(.offer-row--removed)").forEach((row) => {
+    sum += rowPreviewWeight(row);
+    activeCount += 1;
+  });
+
+  valueEl.textContent = `${sum}%`;
+  const ok = activeCount > 0 && sum === 100;
+  hero.classList.toggle("editor-weight-hero--ok", ok);
+  valueEl.classList.toggle("editor-weight-value--ok", ok);
+  valueEl.classList.toggle("editor-weight-value--warn", activeCount > 0 && sum !== 100);
+}
+
+function bindEditorPinPreview() {
+  document.querySelectorAll(".field--pin").forEach((input) => {
+    if (input.dataset.legkoPinBound === "1") return;
+    input.dataset.legkoPinBound = "1";
+    const onPreview = () => {
+      input.dataset.pinPreview = "1";
+      updateWeightSumPreview();
+    };
+    input.addEventListener("input", onPreview);
+    input.addEventListener("change", onPreview);
+    input.addEventListener("blur", onPreview);
+  });
+}
+
+function rebindEditorLiveRegion() {
+  bindEditorAddOffer();
+  bindEditorPinPreview();
+  bindEditorPushModal();
+  updateWeightSumPreview();
+}
+
 function bindEditorPushModal() {
   const openBtn = document.getElementById("editor-open-push");
   const backdrop = document.getElementById("editor-push-backdrop");
@@ -127,9 +184,14 @@ function bindEditorPushModal() {
   });
 }
 
+document.body.addEventListener("htmx:afterSwap", (event) => {
+  if (event.detail?.target?.id === "editor-live-region") {
+    rebindEditorLiveRegion();
+  }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
-  bindEditorAddOffer();
   bindEditorCopyUrl();
   bindEditorFetchLoading();
-  bindEditorPushModal();
+  rebindEditorLiveRegion();
 });

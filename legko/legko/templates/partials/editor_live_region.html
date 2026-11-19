@@ -1,0 +1,208 @@
+{% from "partials/editor_row_icons.html" import icon_remove, icon_restore, icon_lock, icon_unlock %}
+<div id="editor-live-region">
+  {% if op_error %}
+  <p class="alert alert-error" role="alert">{{ op_error }}</p>
+  {% endif %}
+
+  {% if offer_stream_draft %}
+  <p class="editor-draft-banner" role="status">
+    Есть несохранённые изменения — в Keitaro пока прежний сплит. После правок появится Push.
+  </p>
+  {% endif %}
+
+  <article class="card editor-workspace card--editor-lab{% if offer_stream_draft %} card--draft{% endif %}">
+    <header class="editor-workspace-head">
+      <h2 class="card-heading editor-section-title">Ротация офферов</h2>
+      <div
+        id="editor-weight-hero"
+        class="editor-weight-hero{% if weights_valid %} editor-weight-hero--ok{% endif %}"
+        aria-live="polite"
+      >
+        <span class="editor-weight-label">Σ активных</span>
+        <span
+          id="editor-weight-sum-value"
+          class="editor-weight-value tabular-nums{% if weights_valid %} editor-weight-value--ok{% elif active_weight_sum != 100 %} editor-weight-value--warn{% endif %}"
+          data-server-sum="{{ active_weight_sum }}"
+        >
+          {{ active_weight_sum }}%
+        </span>
+      </div>
+    </header>
+
+    <div class="stream-muted-row" role="note">
+      <span class="stream-muted-icon" aria-hidden="true">🔒</span>
+      <span class="stream-muted-text">{{ service_stream_label }}</span>
+      <span class="stream-muted-hint">не редактируется</span>
+    </div>
+
+    {% if offers %}
+    <div class="offer-table-wrap">
+      <table class="data-table data-table--offers">
+        <thead>
+          <tr>
+            <th scope="col">Оффер</th>
+            <th scope="col" class="col-weight">Вес %</th>
+            <th scope="col" class="col-pin">Закрепить %</th>
+            <th scope="col" class="col-actions"><span class="visually-hidden">Действия</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in offers %}
+          <tr class="offer-row{% if row.status.value == 'removed' %} offer-row--removed{% endif %}">
+            <td class="offer-cell-name">
+              <div class="offer-cell-name-main">
+                <strong class="offer-cell-title" title="{{ row.offer_name or '' }}">{{ row.offer_name or '—' }}</strong>
+                {% if row.status.value == 'removed' %}
+                <span class="offer-removed-tag">Удалён</span>
+                {% endif %}
+              </div>
+              <span class="offer-cell-id text-muted tabular-nums">#{{ row.keitaro_offer_id }}</span>
+            </td>
+            <td class="offer-cell-weight weight tabular-nums">{{ row.weight_percent }}%</td>
+            <td class="offer-cell-pin">
+              {% if row.status.value == 'removed' %}
+              <span class="text-muted" aria-hidden="true">—</span>
+              {% elif row.is_pinned %}
+              <form
+                method="post"
+                action="/campaigns/{{ campaign.id }}/offers/{{ row.id }}/unpin"
+                class="inline-action-form inline-action-form--pin-col"
+                hx-post="/campaigns/{{ campaign.id }}/offers/{{ row.id }}/unpin"
+                hx-target="#editor-live-region"
+                hx-swap="outerHTML"
+              >
+                <span class="pin-lock" title="Закреплён">{{ row.pinned_percent or row.weight_percent }}%</span>
+                <button type="submit" class="btn-pin-action" title="Снять закрепление" aria-label="Открепить оффер">
+                  {{ icon_unlock() }}
+                  <span>Открепить</span>
+                </button>
+              </form>
+              {% else %}
+              <form
+                method="post"
+                action="/campaigns/{{ campaign.id }}/offers/{{ row.id }}/pin"
+                class="inline-action-form inline-action-form--pin-col"
+                hx-post="/campaigns/{{ campaign.id }}/offers/{{ row.id }}/pin"
+                hx-target="#editor-live-region"
+                hx-swap="outerHTML"
+              >
+                <label class="visually-hidden" for="pin-{{ row.id }}">Процент закрепления</label>
+                <input
+                  class="field field--pin"
+                  id="pin-{{ row.id }}"
+                  type="number"
+                  name="pin_percent"
+                  min="1"
+                  max="99"
+                  placeholder="%"
+                  value="{{ row.weight_percent }}"
+                  aria-label="Процент для закрепления"
+                />
+                <button type="submit" class="btn-pin-action btn-pin-action--accent" title="Зафиксировать введённый %" aria-label="Закрепить процент">
+                  {{ icon_lock() }}
+                  <span>Закрепить</span>
+                </button>
+              </form>
+              {% endif %}
+            </td>
+            <td class="offer-cell-actions">
+              {% if row.status.value == 'removed' %}
+              <form
+                method="post"
+                action="/campaigns/{{ campaign.id }}/offers/{{ row.id }}/restore"
+                class="inline-action-form"
+                hx-post="/campaigns/{{ campaign.id }}/offers/{{ row.id }}/restore"
+                hx-target="#editor-live-region"
+                hx-swap="outerHTML"
+              >
+                <button type="submit" class="btn-icon btn-icon--ghost" title="Вернуть в ротацию" aria-label="Вернуть в ротацию">
+                  {{ icon_restore() }}
+                </button>
+              </form>
+              {% else %}
+              <form
+                method="post"
+                action="/campaigns/{{ campaign.id }}/offers/{{ row.id }}/remove"
+                class="inline-action-form"
+                hx-post="/campaigns/{{ campaign.id }}/offers/{{ row.id }}/remove"
+                hx-target="#editor-live-region"
+                hx-swap="outerHTML"
+              >
+                <button type="submit" class="btn-icon btn-icon--danger" title="Убрать из ротации" aria-label="Убрать из ротации">
+                  {{ icon_remove() }}
+                </button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="editor-table-empty text-muted">В оффер-потоке нет строк — обновите из Keitaro или проверьте кампанию.</p>
+    {% endif %}
+
+    <section class="editor-add-strip" aria-labelledby="editor-add-heading">
+      <h3 class="editor-add-title" id="editor-add-heading">Добавить в ротацию</h3>
+      <form method="post" action="/campaigns/{{ campaign.id }}/offers" class="editor-add-form">
+        <input type="hidden" name="offer_id" id="editor_offer_id" value="" />
+        <div class="search-open-row combo-wrap--editor-add">
+          <div class="combo-wrap combo-wrap--offer">
+            <label class="visually-hidden" for="editor_offer_query">Поиск оффера Keitaro</label>
+            <input
+              class="field combo-input"
+              id="editor_offer_query"
+              type="search"
+              autocomplete="off"
+              placeholder="ID или название оффера…"
+              hx-get="/offers/search"
+              hx-trigger="keyup changed delay:300ms, focus"
+              hx-target="#editor-offer-suggestions"
+            />
+            <div id="editor-offer-suggestions" class="combo-dropdown" aria-live="polite"></div>
+          </div>
+          <button type="submit" class="btn-secondary btn-secondary--open">Добавить</button>
+        </div>
+      </form>
+    </section>
+  </article>
+
+  <footer class="editor-publish-dock" aria-label="Публикация в Keitaro">
+    <div class="editor-publish-status">
+      {% if not weights_valid %}
+      <p class="editor-publish-hint editor-publish-hint--warn">
+        {% if active_offer_count == 0 %}
+        Нет активных офферов — добавьте строку или верните удалённую.
+        {% elif active_weight_sum != 100 %}
+        Сумма {{ active_weight_sum }}% — доведите активные веса до 100% перед Push.
+        {% endif %}
+      </p>
+      {% elif offer_stream_draft %}
+      <p class="editor-publish-hint">Веса в норме. Push выложит черновик в Keitaro.</p>
+      {% else %}
+      <p class="editor-publish-hint">Изменений нет — Push станет доступен после правок.</p>
+      {% endif %}
+    </div>
+    <div class="editor-publish-actions">
+      <form method="post" action="/campaigns/{{ campaign.id }}/cancel" class="editor-cancel-form">
+        <button
+          type="submit"
+          class="btn-secondary"
+          {% if not can_cancel %}disabled aria-disabled="true" title="Нет черновика"{% endif %}
+        >
+          Отменить изменения
+        </button>
+      </form>
+      <button
+        type="button"
+        class="btn-primary{% if not can_push %} btn-primary--disabled{% endif %}"
+        id="editor-open-push"
+        data-push-preview-url="/campaigns/{{ campaign.id }}/push/preview"
+        {% if not can_push %}disabled aria-disabled="true" title="{{ push_disabled_reason or 'Push недоступен' }}"{% endif %}
+      >
+        Push в Keitaro
+      </button>
+    </div>
+  </footer>
+</div>
