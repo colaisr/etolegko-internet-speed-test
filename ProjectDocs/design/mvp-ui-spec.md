@@ -14,31 +14,30 @@
 ## 2. Карта экранов
 
 ```text
-[Home] ── Create ──> [Creator]
-  │                      │
-  │ Open by ID / Recent  └────> [Editor]
-  └──────────────────────────> [Editor]
+[Home] ── Create (modal) ──> success modal ──> [Editor]
+  │         Open / Recent (modals)
+  └──────────────────────────────> [Editor]
 ```
 
-**Home:** два primary CTA — «Создать кампанию», блок «Открыть» (поле Keitaro ID + список недавних).
+**Home:** hero (copy), карточка workspace: поиск + Open, **Создать** по центру над таблицей недавних.
 
 ## 3. Экран: Home
 
-- Заголовок Legko + одна строка: «Настройте сплит до выкладки в Keitaro».
-- **Создать кампанию** (primary).
-- **Открыть:** input `Campaign ID (Keitaro)` + кнопка Open.
-- **Недавние:** до 10 строк — имя, keitaro id, мини-бейдж статуса → клик = Editor.
+- Тёмный hero: kicker, заголовок, подзаголовок (без CTA в полосе).
+- Карточка: combobox Open, полоса **Создать кампанию** (`workspace-create-strip`).
+- **Недавние:** таблица до 10 строк — имя, Keitaro id, geo, url, обновлено, status pill → клик = модалка → Editor.
 
-## 4. Экран: Creator
+## 4. Экран: Creator (модалка)
 
 | Зона | Элементы |
 | --- | --- |
-| Форма | Name, Geo (ISO-2 + hint), Offer (combobox поиск) |
-| Превью | Карточка: «Поток 1: {geo} → Google» / «Поток 2: остальное → {offer}» |
-| Инфо | Серый блок: Domain · Group · Source (read-only из конфига) |
-| Действия | Create (primary) |
+| Форма | Name, Geo (чипы + combobox), Offer (combobox focus/list) |
+| Превью | «Поток 1…» / «Поток 2…» |
+| Инфо | Domain · Group · Source (read-only env) |
+| Валидация | Слоты ошибок под полями, без summary-дубля |
+| Действия | Отмена + Create (primary) |
 
-**Success state (тот же route или success panel):**
+**Success state (модалка):**
 
 - Campaign URL + copy
 - Keitaro ID

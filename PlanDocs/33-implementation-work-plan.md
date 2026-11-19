@@ -215,7 +215,7 @@
 | --- | --- | --- | --- |
 | 1 | `foundation-keitaro-client` | F0 | [x] |
 | 2 | `home-navigation` | F1 | [x] |
-| 3 | `campaign-creator` | F2 | [ ] |
+| 3 | `campaign-creator` | F2 | [x] |
 | 4 | `stream-editor-fetch-ui` | F3 | [ ] |
 | 5 | `stream-editor-offer-ops` | F4 | [ ] |
 | 6 | `stream-editor-publish` | F5,F6 | [ ] |

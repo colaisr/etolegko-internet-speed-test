@@ -1,0 +1,26 @@
+{% if not items %}
+{% if query %}
+<p class="combo-hint text-muted text-muted--compact">Ничего не найдено в Keitaro</p>
+{% else %}
+<p class="combo-hint text-muted text-muted--compact">Не удалось загрузить офферы — проверьте Keitaro API</p>
+{% endif %}
+{% else %}
+{% if not query %}
+<p class="combo-hint text-muted text-muted--compact">Недавние / популярные офферы — выберите или введите ID / название</p>
+{% endif %}
+<ul class="combo-list" role="listbox">
+  {% for item in items %}
+  <li role="option">
+    <button
+      type="button"
+      class="combo-option"
+      data-offer-id="{{ item.id }}"
+      data-label="{{ item.name }}"
+    >
+      <span class="combo-option-id">#{{ item.id }}</span>
+      <span class="combo-option-name">{{ item.name }}</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}

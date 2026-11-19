@@ -1,0 +1,124 @@
+<div class="modal-panel modal-panel--creator" id="creator-form-panel">
+  <div class="modal-loading" id="creator-loading" hidden aria-live="polite">
+    <span class="spinner" aria-hidden="true"></span>
+    <p class="modal-loading-text">Создаём кампанию в Keitaro…</p>
+    <p class="text-muted text-muted--compact">Обычно 3–8 секунд</p>
+  </div>
+  <h2 class="modal-title" id="create-modal-title">Новая кампания</h2>
+  <p class="text-muted text-muted--compact">Шаблон: geo → Google, остальной трафик → один оффер 100%.</p>
+  {% if config_error %}
+  <p class="alert alert-error" role="alert">{{ config_error }}</p>
+  {% endif %}
+  {% if error_message %}
+  <p class="alert alert-error" role="alert">{{ error_message }}</p>
+  {% endif %}
+  <form
+    method="post"
+    action="/campaigns/new"
+    id="creator-form"
+    class="creator-form"
+    novalidate
+    onsubmit="event.preventDefault(); legkoSubmitCreator();"
+  >
+    <div class="field-block" data-field="campaign_name">
+      <label class="field-label field-label--required" for="campaign_name">Название кампании</label>
+      <input
+        class="field"
+        id="campaign_name"
+        name="name"
+        type="text"
+        required
+        maxlength="255"
+        value="{{ form_name }}"
+        autocomplete="off"
+        aria-describedby="campaign_name-error"
+        data-preview="name"
+      />
+      <p class="field-error-slot" id="campaign_name-error" role="alert" aria-live="polite"></p>
+    </div>
+
+    <div class="field-block" data-field="geo_code">
+      <label class="field-label field-label--spaced field-label--required" for="geo_code">Geo (ISO-2)</label>
+      <p class="field-hint">Выберите из списка или введите код из двух латинских букв.</p>
+    <div class="geo-quick-picks" role="group" aria-label="Частые geo">
+      {% for code in geo_quick_picks %}
+      <button type="button" class="geo-chip" data-geo-code="{{ code }}">{{ code }}</button>
+      {% endfor %}
+    </div>
+    <div class="combo-wrap combo-wrap--geo">
+      <input
+        class="field combo-input field--geo"
+        id="geo_code"
+        name="geo"
+        type="search"
+        required
+        maxlength="2"
+        value="{{ form_geo }}"
+        placeholder="AU или поиск…"
+        autocomplete="off"
+        autocapitalize="characters"
+        spellcheck="false"
+        data-preview="geo"
+        hx-get="/geo/search"
+        hx-trigger="keyup changed delay:150ms, focus"
+        hx-target="#geo-suggestions"
+        aria-describedby="geo_code-error"
+      />
+      <div id="geo-suggestions" class="combo-dropdown" aria-live="polite"></div>
+    </div>
+      <p class="field-error-slot" id="geo_code-error" role="alert" aria-live="polite"></p>
+    </div>
+
+    <div class="field-block field-block--offer" data-field="offer_query">
+      <label class="field-label field-label--spaced field-label--required" for="offer_query">Оффер Keitaro</label>
+      <p class="field-hint" id="offer_field_hint">
+        Кликните в поле — появится список Keitaro. Можно ввести только ID.
+      </p>
+      <input type="hidden" name="offer_id" id="offer_id" value="{{ form_offer_id }}" />
+      <div class="combo-wrap combo-wrap--offer">
+        <input
+          class="field combo-input"
+          id="offer_query"
+          name="q"
+          type="search"
+          autocomplete="off"
+          placeholder="ID или название…"
+          value="{{ form_offer_label }}"
+          hx-get="/offers/search"
+          hx-trigger="keyup changed delay:300ms, focus"
+          hx-target="#offer-suggestions"
+          aria-describedby="offer_field_hint offer_query-error"
+          data-preview="offer"
+        />
+        <div id="offer-suggestions" class="combo-dropdown" aria-live="polite"></div>
+      </div>
+      <p class="field-error-slot field-error-slot--offer" id="offer_query-error" role="alert" aria-live="polite"></p>
+    </div>
+
+    <div class="preview-box" id="template-preview" aria-live="polite">
+      <p class="field-label">Превью шаблона</p>
+      <ul class="preview-list">
+        <li><span class="preview-line" id="preview-stream-geo">Поток 1: <strong>…</strong> → Google</span></li>
+        <li><span class="preview-line" id="preview-stream-offer">Поток 2: остальной трафик → оффер <strong>…</strong></span></li>
+      </ul>
+    </div>
+
+    <dl class="config-readonly">
+      <dt>Домен (env)</dt><dd>{{ domain_id if domain_id is not none else "—" }}</dd>
+      <dt>Группа (env)</dt><dd>{{ group_id if group_id is not none else "—" }}</dd>
+      <dt>Источник (env)</dt><dd>{{ source_id if source_id is not none else "—" }}</dd>
+    </dl>
+
+    <div class="modal-actions field-row field-row--actions">
+      <button type="button" class="btn-secondary" data-modal-close>Отмена</button>
+      <button
+        type="button"
+        id="creator-submit-btn"
+        class="btn-primary{% if not configured %} btn-primary--disabled{% endif %}"
+        {% if not configured %}disabled aria-disabled="true"{% else %}onclick="legkoSubmitCreator()"{% endif %}
+      >
+        Создать
+      </button>
+    </div>
+  </form>
+</div>

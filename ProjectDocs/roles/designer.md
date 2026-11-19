@@ -27,6 +27,8 @@ UX/UI Legko в **корпоративном стиле «Это Легко»** +
 - [ ] `ux-principles.md` §5
 - [ ] Новые элементы — в `design-system.md` §2
 - [ ] `legko-tokens.css` / тема синхронизованы с tokens
+- [ ] Home/Creator: StatusPill, CTA в workspace; hero без primary
+- [ ] Модалка создателя: `field-error-slot`, без дублирующих алертов
 
 ## Вердикт
 

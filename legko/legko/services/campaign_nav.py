@@ -79,3 +79,11 @@ def sync_status_badge_class(status: SyncStatus) -> str:
         SyncStatus.DRAFT: "badge-draft",
         SyncStatus.NEEDS_FETCH: "badge-needs-fetch",
     }.get(status, "badge-draft")
+
+
+def sync_status_pill_class(status: SyncStatus) -> str:
+    return {
+        SyncStatus.SYNCED: "status-pill--sync",
+        SyncStatus.DRAFT: "status-pill--draft",
+        SyncStatus.NEEDS_FETCH: "status-pill--attention",
+    }.get(status, "status-pill--draft")

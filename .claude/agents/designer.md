@@ -1,6 +1,6 @@
 ---
 name: designer
-description: UX/UI Legko — корпоративный стиль «Это Легко», design-system, симулятор сплита Keitaro. Только компоненты из design-system.md.
+description: UX/UI Legko — корпоративный стиль «Это Легко», design-system (StatusPill, workspace CTA, creator field-error-slot), симулятор сплита Keitaro. Только компоненты из design-system.md.
 tools: Read, Grep, Glob, Bash
 ---
 

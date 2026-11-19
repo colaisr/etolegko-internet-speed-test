@@ -1,0 +1,9 @@
+{
+  "gate": "qa",
+  "change": "campaign-creator",
+  "round": 1,
+  "verdict": "pass",
+  "reviewed_at": "2026-11-19T07:30:00.000Z",
+  "checks": ["pytest 30 passed", "ручная приёмка F2 UI"],
+  "findings": []
+}

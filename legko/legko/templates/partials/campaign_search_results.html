@@ -1,8 +1,13 @@
-{% if not query %}
-<p class="combo-hint text-muted text-muted--compact">Начните вводить ID или название кампании</p>
-{% elif not items %}
+{% if not items %}
+{% if query %}
 <p class="combo-hint text-muted text-muted--compact">Ничего не найдено в Keitaro</p>
 {% else %}
+<p class="combo-hint text-muted text-muted--compact">Не удалось загрузить кампании — проверьте Keitaro API</p>
+{% endif %}
+{% else %}
+{% if not query %}
+<p class="combo-hint text-muted text-muted--compact">Выберите кампанию из списка или введите ID / название</p>
+{% endif %}
 <ul class="combo-list" role="listbox">
   {% for item in items %}
   <li role="option">

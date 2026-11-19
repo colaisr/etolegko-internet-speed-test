@@ -1,6 +1,6 @@
 # openspec — технические спеки и активные changes
 
-> **Статус:** инфраструктура готова, активных changes нет. Замысел — [`PlanDocs/README.md`](../PlanDocs/README.md). Бизнес-описание — [`ProductDocs/README.md`](../ProductDocs/README.md).
+> **Статус:** активных changes нет (после archive `campaign-creator`). Замысел — [`PlanDocs/README.md`](../PlanDocs/README.md). Бизнес-описание — [`ProductDocs/README.md`](../ProductDocs/README.md).
 
 ## Активные changes
 
@@ -8,17 +8,25 @@
 | --- | --- |
 | — | Пока нет. |
 
-`npx @fission-ai/openspec@latest list` — актуальный список.
-
 ## Живые спеки `specs/<capability>/spec.md`
 
 | Capability | Что описывает | ProductDocs |
 | --- | --- | --- |
-| — | Появятся после первого archive | — |
+| `app-foundation` | Каркас FastAPI, шаблоны, статика | `00-product-overview` |
+| `health` | `/health` | `00-product-overview` |
+| `keitaro-client` | HTTP-адаптер Keitaro | `00-product-overview` |
+| `home-navigation` | Главная, open, недавние | `03-home-and-navigation` |
+| `campaign-creator` | Создатель шаблона, модалка | `01-campaign-creator` |
 
 ## Archive
 
 Завершённые changes — `changes/archive/`. Не использовать как норму для новых решений.
+
+| Archived | Дата |
+| --- | --- |
+| `foundation-keitaro-client` | 2026-11-19 |
+| `home-navigation` | 2026-11-19 |
+| `campaign-creator` | 2026-11-19 |
 
 ## Связка с процессом
 

@@ -1,0 +1,18 @@
+{
+  "gate": "docs-sync",
+  "change": "campaign-creator",
+  "round": 1,
+  "verdict": "pass",
+  "reviewed_at": "2026-11-19T07:30:00.000Z",
+  "pages": [
+    "ProductDocs/01-campaign-creator.md",
+    "ProductDocs/03-home-and-navigation.md",
+    "ProductDocs/00-product-overview.md"
+  ],
+  "planDocsMarked": [
+    "PlanDocs/01-campaign-creator.md",
+    "PlanDocs/30-mvp-features-and-acceptance.md",
+    "PlanDocs/33-implementation-work-plan.md"
+  ],
+  "findings": []
+}

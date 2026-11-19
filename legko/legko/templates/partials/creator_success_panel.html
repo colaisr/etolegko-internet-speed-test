@@ -1,0 +1,24 @@
+<div class="modal-panel modal-panel--success">
+  <h2 class="modal-title" id="create-modal-title">Кампания создана</h2>
+  <p class="text-muted">Keitaro id: <strong>#{{ campaign.keitaro_campaign_id }}</strong></p>
+  {% if campaign.campaign_url %}
+  <p class="field-label">Ссылка для трафика</p>
+  <p class="url-copy"><code class="url-copy-code">{{ campaign.campaign_url }}</code></p>
+  {% else %}
+  <p class="text-muted text-muted--compact">URL кампании не вернулся из Keitaro — проверьте кампанию в трекере.</p>
+  {% endif %}
+
+  <dl class="success-meta">
+    <dt>Название</dt><dd>{{ campaign.name }}</dd>
+    <dt>Geo</dt><dd>{{ campaign.geo_code }}</dd>
+    <dt>Оффер</dt><dd>#{{ offer_id }} · {{ offer_name }}</dd>
+    <dt>Домен (env)</dt><dd>{{ domain_id }}</dd>
+    <dt>Группа (env)</dt><dd>{{ group_id }}</dd>
+    <dt>Источник (env)</dt><dd>{{ source_id }}</dd>
+  </dl>
+
+  <div class="modal-actions field-row field-row--actions">
+    <button type="button" class="btn-secondary" data-modal-close>Закрыть</button>
+    <a href="/campaigns/{{ campaign.id }}/editor" class="btn-primary">Перейти в редактор</a>
+  </div>
+</div>

@@ -14,7 +14,16 @@ def test_home_shows_create_and_open():
         response = client.get("/")
     assert response.status_code == 200
     assert "Создать кампанию" in response.text
-    assert 'action="/campaigns/open"' in response.text
+    assert 'id="open-create-campaign"' in response.text
+    assert "hero-strip--brand" in response.text
+    assert "workspace-create-strip" in response.text
+    assert "btn-primary--workspace" in response.text
+    assert "data-table--recent" in response.text
+    assert "card--home-workspace" in response.text
+    assert "legkoOpenCreate()" in response.text
+    assert "legkoOpenRecent(" in response.text
+    assert 'id="app-modal"' in response.text
+    assert "grid-2" not in response.text
     assert "hx-get=\"/campaigns/search\"" in response.text
 
 

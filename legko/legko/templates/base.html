@@ -18,7 +18,7 @@
     </a>
     <nav class="app-nav" aria-label="Основное">
       <a class="nav-link{% if nav_home %} nav-link--active{% endif %}" href="/">Главная</a>
-      <a class="nav-link{% if nav_create %} nav-link--active{% endif %}" href="/campaigns/new">Создать</a>
+      <a class="nav-link{% if nav_create %} nav-link--active{% endif %}" href="/?create=1">Создать</a>
       <a class="nav-link nav-link--muted" href="/docs">Документация</a>
     </nav>
   </header>
@@ -26,6 +26,6 @@
     {% block content %}{% endblock %}
   </main>
   <script src="https://unpkg.com/htmx.org@2.0.4"></script>
-  <script src="/static/js/home-open.js" defer></script>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

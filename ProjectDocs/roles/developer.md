@@ -17,6 +17,11 @@ lint, тесты на ключевую логику (веса, sync, push), smok
 
 В каждом change — гейт docs-sync (`openspec-gates.md`).
 
+## UI (F1–F2)
+
+- Компоненты только из `design-system.md`; правки Home/Creator — `static/css/components.css`, partials + `static/js/*`.
+- HTMX-модалки: `home-modal.js` re-bind `bindCreatorForm` после swap.
+
 ## Чтение
 
 T1: `AGENTS.md`, `PlanDocs/15-architecture.md`, релевантный раздел PlanDocs по change.

@@ -38,9 +38,12 @@ cp .env.example .env
 ```bash
 KEITARO_API_KEY=ваш_ключ_без_кавычек
 KEITARO_BASE_URL=https://tlgk.host/admin_api/v1   # если другой хост — замените
+KEITARO_DEFAULT_DOMAIN_ID=...
+KEITARO_DEFAULT_GROUP_ID=...
+KEITARO_DEFAULT_SOURCE_ID=...
 ```
 
-Файл `.env` в git **не коммитится**. Без ключа `/health` и поиск кампаний на главной не работают.
+Файл `.env` в git **не коммитится**. Без ключа `/health` и поиск кампаний на главной не работают. Для **создателя кампании** (`/campaigns/new`) нужны три `KEITARO_DEFAULT_*_ID` (ID из Keitaro admin).
 
 ### Git hooks (ProductDocs перед push)
 

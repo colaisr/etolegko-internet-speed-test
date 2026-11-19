@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Кампания создана — Legko{% endblock %}
+{% block content %}
+<section class="card">
+  <h1 class="page-title">Кампания создана</h1>
+  <p class="text-muted">Keitaro id: <strong>#{{ campaign.keitaro_campaign_id }}</strong></p>
+  {% if campaign.campaign_url %}
+  <p class="field-label">Ссылка для трафика</p>
+  <p class="url-copy"><code class="url-copy-code">{{ campaign.campaign_url }}</code></p>
+  {% else %}
+  <p class="text-muted">URL кампании не вернулся из Keitaro — проверьте кампанию в трекере.</p>
+  {% endif %}
+
+  <dl class="success-meta">
+    <dt>Название</dt><dd>{{ campaign.name }}</dd>
+    <dt>Geo</dt><dd>{{ campaign.geo_code }}</dd>
+    <dt>Оффер</dt><dd>#{{ offer_id }} · {{ offer_name }}</dd>
+    <dt>Домен (env)</dt><dd>{{ domain_id }}</dd>
+    <dt>Группа (env)</dt><dd>{{ group_id }}</dd>
+    <dt>Источник (env)</dt><dd>{{ source_id }}</dd>
+    <dt>Служебный поток</dt><dd>{{ google_redirect_url }}</dd>
+  </dl>
+
+  <div class="field-row field-row--actions">
+    <a href="/campaigns/{{ campaign.id }}/editor" class="btn-primary">Перейти в редактор</a>
+    <a href="/campaigns/new" class="btn-secondary">Создать ещё</a>
+  </div>
+</section>
+{% endblock %}

@@ -102,12 +102,19 @@ States: hover, disabled (opacity .45), loading (spinner).
 | `draft` | янтарный fill light |
 | `warning` | синий outline «Проверьте Keitaro» |
 
+### `StatusPill`
+
+- Для статуса кампании в таблицах и модалках (не CTA): скруглённый pill, точка + текст sentence case.
+- Варианты: `status-pill--sync`, `--draft`, `--attention`.
+- Не использовать uppercase/outline «как у кнопки».
+
 ### `DataTable`
 
 - Header row muted xs uppercase.
 - Колонка **Weight**: `font-size: text-lg`, `font-weight: bold`, `font-variant-numeric: tabular-nums`.
 - Row removed: bg `--status-removed`, opacity .85.
 - Footer: «Сумма: **100%**» или ошибка красным.
+- **Home recent:** `data-table--recent`, строка-кнопка `recent-row`, hover bg app.
 
 ### `OfferCombobox`
 
@@ -117,9 +124,26 @@ States: hover, disabled (opacity .45), loading (spinner).
 
 - Одна строка, иконка lock, `text-muted`, full width.
 
+### `HeroStrip` (Home)
+
+- `hero-strip--brand`: тёмный фон header, нижняя граница 3px accent, только copy (без primary CTA).
+- Kicker «Legko × Keitaro» accent uppercase.
+
+### `WorkspaceCreateStrip`
+
+- Внутри `card--home-workspace`: центрированный `btn-primary--workspace` + muted meta про шаблон.
+- Лёгкий лаймовый градиент фона, border card.
+
+### `CreatorForm` (modal)
+
+- `field-label--required` — метка «· обязательно».
+- `field-error-slot` — зарезервированная высота под ошибку (модалка не скачет).
+- `field--invalid` — красная рамка; одна строка ошибки, без дублирующего summary-блока.
+
 ### `Modal` / `PushConfirmModal`
 
 - Overlay; заголовок; секции diff (Add/Remove/Weights); footer Cancel + primary «Подтвердить Push».
+- Create/open/recent на Home — `modal-panel` в `#app-modal-body`.
 
 ### `Toast` / `InlineAlert`
 
@@ -129,16 +153,12 @@ States: hover, disabled (opacity .45), loading (spinner).
 
 - URL кампании + кнопка copy (accent icon).
 
-### `RecentList`
-
-- Строки 48px, hover bg, badge справа.
-
 ## 3. Макет страниц
 
 | Страница | Структура |
 | --- | --- |
-| Home | Header dark + светлый main: hero-полоска лайм-акцент текст + 2 колонки CTA |
-| Creator | Card форма + preview card dashed border |
+| Home | Header dark + hero copy; card: search/Open, create strip по центру, таблица недавних |
+| Creator | Модалка на Home: форма + preview + env read-only |
 | Editor | Header campaign meta + Card table + sticky footer Push/Cancel |
 
 ## 4. Реализация (фаза E)

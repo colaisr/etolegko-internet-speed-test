@@ -54,6 +54,8 @@
 
 ## F2 — Создатель кампании
 
+> **Реализовано** (2026-11-19, change `campaign-creator`). Как работает сейчас: [`ProductDocs/01-campaign-creator.md`](../ProductDocs/01-campaign-creator.md).
+
 **Ценность:** стандартная 2-поточная кампания без ручной сборки в Keitaro.
 
 | AC | Критерий |

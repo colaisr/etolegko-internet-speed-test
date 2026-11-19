@@ -1,0 +1,25 @@
+{% if not query %}
+<ul class="combo-list" role="listbox">
+  {% for item in items %}
+  <li role="option">
+    <button type="button" class="combo-option" data-geo-code="{{ item.code }}" data-label="{{ item.name }}">
+      <span class="combo-option-id">{{ item.code }}</span>
+      <span class="combo-option-name">{{ item.name }}</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+{% elif not items %}
+<p class="combo-hint text-muted text-muted--compact">Нет в списке — введите любой ISO-2 (например AU)</p>
+{% else %}
+<ul class="combo-list" role="listbox">
+  {% for item in items %}
+  <li role="option">
+    <button type="button" class="combo-option" data-geo-code="{{ item.code }}" data-label="{{ item.name }}">
+      <span class="combo-option-id">{{ item.code }}</span>
+      <span class="combo-option-name">{{ item.name }}</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}

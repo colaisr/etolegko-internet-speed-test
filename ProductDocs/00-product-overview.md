@@ -1,6 +1,6 @@
 # Обзор Legko
 
-> **Обновлено:** 2026-11-19 · **Change:** foundation-keitaro-client · **PlanDocs (F0):** реализовано  
+> **Обновлено:** 2026-11-19 · **Change:** campaign-creator · **PlanDocs (F0–F2):** реализовано  
 > **Замысел:** [PlanDocs/00-product-overview.md](../PlanDocs/00-product-overview.md) · **Технические спеки:** openspec/specs (после archive)
 
 ## 1. Что это и зачем
@@ -16,7 +16,9 @@ Legko — рабочее место медиабайера поверх Keitaro:
 - техническая OpenAPI-схема на **`/api/docs`** (путь `/docs` зарезервирован под ProductDocs, F9);
 - ссылка «Документация» в шапке ведёт на **`/docs`** — рендер ProductDocs появится в change `project-readme-delivery`.
 
-**Главная (F1):** создание (заглушка), поиск и open кампании Keitaro, недавние — см. [03-home-and-navigation.md](03-home-and-navigation.md). Полный создатель и редактор офферов — в следующих changes.
+**Главная (F1):** поиск и open кампании Keitaro, таблица недавних, модалки — [03-home-and-navigation.md](03-home-and-navigation.md).
+
+**Создатель (F2):** модальное создание 2-поточного шаблона в Keitaro — [01-campaign-creator.md](01-campaign-creator.md). Редактор сплита офферов — в F3+.
 
 ## 3. Кто что может
 
@@ -29,12 +31,12 @@ Legko — рабочее место медиабайера поверх Keitaro:
 
 ## 5. Отличия от замысла (PlanDocs)
 
-Пока реализован только каркас (F0); продуктовые сценарии из замысла ещё не доступны в UI.
+Редактор (таблица весов, Push) и in-app ProductDocs — в следующих changes.
 
 ## 6. Связанные страницы и спеки
 
 - Замысел: [PlanDocs/00-product-overview.md](../PlanDocs/00-product-overview.md)
-- Спеки: `app-foundation`, `keitaro-client`, `health` (change `foundation-keitaro-client`)
+- Спеки: `app-foundation`, `keitaro-client`, `health`, `home-navigation`, `campaign-creator`
 
 ## Журнал обновлений
 

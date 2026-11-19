@@ -15,8 +15,20 @@ from legko.services.campaign_nav import (
     parse_keitaro_id,
     sync_status_badge_class,
     sync_status_label,
+    sync_status_pill_class,
+)
+from legko.domain.geo_presets import GEO_PRESETS, GEO_QUICK_PICKS, filter_geo_presets
+from legko.services.campaign_creator import (
+    CreatorConfigError,
+    CreatorValidationError,
+    create_campaign_from_form,
+    creator_config_view,
+    get_created_campaign,
+    parse_offer_id,
+    success_context,
 )
 from legko.services.campaign_search import search_keitaro_campaigns
+from legko.services.offer_search import search_keitaro_offers
 from legko.settings import get_settings
 
 router = APIRouter()
@@ -24,6 +36,98 @@ router = APIRouter()
 
 def _templates(request: Request):
     return request.app.state.templates
+
+
+def _is_htmx(request: Request) -> bool:
+    return request.headers.get("HX-Request") == "true"
+
+
+def _creator_form_context(
+    *,
+    error_message: str | None = None,
+    form_name: str = "",
+    form_geo: str = "",
+    form_offer_id: str = "",
+    form_offer_label: str = "",
+) -> dict:
+    settings = get_settings()
+    cfg = creator_config_view(settings)
+    return {
+        "error_message": error_message,
+        "form_name": form_name,
+        "form_geo": form_geo,
+        "form_offer_id": form_offer_id,
+        "form_offer_label": form_offer_label,
+        "geo_presets": GEO_PRESETS,
+        "geo_quick_picks": GEO_QUICK_PICKS,
+        **cfg,
+    }
+
+
+async def _build_success_context(
+    db: Session,
+    campaign_id: uuid.UUID,
+) -> dict | None:
+    settings = get_settings()
+    campaign = get_created_campaign(db, campaign_id)
+    if campaign is None or campaign.keitaro_campaign_id is None:
+        return None
+
+    client = KeitaroClient(settings)
+    offer_row = None
+    for stream in campaign.streams:
+        if stream.offers:
+            offer_row = stream.offers[0]
+            break
+    if offer_row is not None:
+        offer_id = offer_row.keitaro_offer_id
+        offer_name = offer_row.offer_name or campaign.name
+        if not offer_row.offer_name:
+            try:
+                remote_offer = await client.get_offer(offer_id)
+                if remote_offer:
+                    offer_name = (remote_offer.get("name") or f"Offer #{offer_id}")[:512]
+            except Exception:
+                offer_name = f"Offer #{offer_id}"
+    else:
+        offer_id = 0
+        offer_name = "—"
+        try:
+            streams = await client.list_campaign_streams(campaign.keitaro_campaign_id)
+            for remote in streams:
+                offers = remote.get("offers") or []
+                if offers:
+                    offer_id = int(offers[0].get("offer_id") or 0)
+                    offer_name = f"Offer #{offer_id}"
+                    break
+        except Exception:
+            pass
+
+    return success_context(
+        campaign,
+        settings,
+        offer_id=offer_id,
+        offer_name=offer_name,
+    )
+
+
+def _short_traffic_label(url: str | None) -> str | None:
+    if not url or not url.strip():
+        return None
+    text = url.strip().replace("https://", "").replace("http://", "")
+    if len(text) > 36:
+        return f"{text[:33]}…"
+    return text
+
+
+def _format_updated_at(campaign) -> str:
+    updated = getattr(campaign, "updated_at", None)
+    if updated is None:
+        return "—"
+    try:
+        return updated.strftime("%d.%m · %H:%M")
+    except (TypeError, ValueError):
+        return "—"
 
 
 def _recent_view(db: Session) -> list[dict]:
@@ -34,8 +138,12 @@ def _recent_view(db: Session) -> list[dict]:
                 "id": c.id,
                 "name": c.name or f"Кампания #{c.keitaro_campaign_id}",
                 "keitaro_campaign_id": c.keitaro_campaign_id,
+                "geo_code": c.geo_code or "—",
+                "traffic_label": _short_traffic_label(c.campaign_url),
+                "updated_label": _format_updated_at(c),
                 "badge_label": sync_status_label(c.sync_status),
                 "badge_class": sync_status_badge_class(c.sync_status),
+                "pill_class": sync_status_pill_class(c.sync_status),
             },
         )
     return items
@@ -46,7 +154,10 @@ async def home(
     request: Request,
     db: Annotated[Session, Depends(get_db)],
     error: str | None = None,
+    create: int | None = None,
+    created: uuid.UUID | None = None,
 ) -> HTMLResponse:
+    created_panel_url = f"/campaigns/{created}/created/panel" if created else None
     return _templates(request).TemplateResponse(
         request=request,
         name="home.html",
@@ -55,6 +166,8 @@ async def home(
             "nav_home": True,
             "recent": _recent_view(db),
             "error_message": error,
+            "open_create_modal": create == 1,
+            "created_panel_url": created_panel_url,
         },
     )
 
@@ -94,12 +207,218 @@ async def open_campaign_post(
     return RedirectResponse(url=f"/campaigns/{local_id}/editor", status_code=303)
 
 
-@router.get("/campaigns/new", response_class=HTMLResponse)
-async def creator_stub(request: Request) -> HTMLResponse:
+@router.get("/geo/search", response_class=HTMLResponse)
+async def geo_search(
+    request: Request,
+    q: str = "",
+) -> HTMLResponse:
+    items = filter_geo_presets(q)
     return _templates(request).TemplateResponse(
         request=request,
-        name="creator_stub.html",
-        context={"page_title": "Новая кампания", "nav_create": True},
+        name="partials/geo_search_results.html",
+        context={"items": items, "query": q.strip()},
+    )
+
+
+@router.get("/offers/search", response_class=HTMLResponse)
+async def offer_search(
+    request: Request,
+    q: str = "",
+) -> HTMLResponse:
+    settings = get_settings()
+    client = KeitaroClient(settings)
+    items = await search_keitaro_offers(client, q)
+    return _templates(request).TemplateResponse(
+        request=request,
+        name="partials/offer_search_results.html",
+        context={"items": items, "query": q.strip()},
+    )
+
+
+@router.get("/campaigns/new/panel", response_class=HTMLResponse)
+async def creator_form_panel(
+    request: Request,
+    error: str | None = None,
+) -> HTMLResponse:
+    return _templates(request).TemplateResponse(
+        request=request,
+        name="partials/creator_form_panel.html",
+        context=_creator_form_context(error_message=error),
+    )
+
+
+@router.get("/campaigns/new", response_class=HTMLResponse)
+async def creator_form(
+    request: Request,
+    error: str | None = None,
+) -> RedirectResponse:
+    from urllib.parse import quote
+
+    url = "/?create=1"
+    if error:
+        url += f"&error={quote(error)}"
+    return RedirectResponse(url=url, status_code=303)
+
+
+@router.get("/campaigns/{campaign_id}/recent/panel", response_class=HTMLResponse)
+async def campaign_recent_panel(
+    request: Request,
+    campaign_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+) -> HTMLResponse:
+    campaign = get_campaign_or_404(db, campaign_id)
+    if campaign is None:
+        return _templates(request).TemplateResponse(
+            request=request,
+            name="partials/creator_form_panel.html",
+            context=_creator_form_context(error_message="Кампания не найдена"),
+            status_code=404,
+        )
+    return _templates(request).TemplateResponse(
+        request=request,
+        name="partials/campaign_recent_panel.html",
+        context={
+            "local_id": campaign.id,
+            "campaign_name": campaign.name or f"Кампания #{campaign.keitaro_campaign_id}",
+            "keitaro_campaign_id": campaign.keitaro_campaign_id,
+            "badge_label": sync_status_label(campaign.sync_status),
+            "badge_class": sync_status_badge_class(campaign.sync_status),
+            "pill_class": sync_status_pill_class(campaign.sync_status),
+        },
+    )
+
+
+@router.get("/campaigns/open/panel", response_class=HTMLResponse)
+async def campaign_open_panel(
+    request: Request,
+    keitaro_campaign_id: str = "",
+    name: str = "",
+) -> HTMLResponse:
+    try:
+        kid = parse_keitaro_id(keitaro_campaign_id)
+    except OpenCampaignError:
+        kid = 0
+    return _templates(request).TemplateResponse(
+        request=request,
+        name="partials/campaign_open_panel.html",
+        context={
+            "keitaro_campaign_id": kid,
+            "campaign_name": name.strip() or f"Campaign #{keitaro_campaign_id}",
+        },
+    )
+
+
+@router.post("/campaigns/new")
+async def creator_submit(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    name: Annotated[str, Form()] = "",
+    geo: Annotated[str, Form()] = "",
+    offer_id: Annotated[str, Form()] = "",
+):
+    settings = get_settings()
+    client = KeitaroClient(settings)
+
+    try:
+        campaign = await create_campaign_from_form(
+            db,
+            client,
+            settings,
+            name=name,
+            geo_raw=geo,
+            offer_id_raw=offer_id,
+        )
+    except (CreatorValidationError, CreatorConfigError) as exc:
+        offer_label = ""
+        if offer_id.strip():
+            try:
+                oid = parse_offer_id(offer_id)
+                offer_label = f"#{oid}"
+            except CreatorValidationError:
+                offer_label = offer_id
+        ctx = _creator_form_context(
+            error_message=exc.user_message,
+            form_name=name,
+            form_geo=geo,
+            form_offer_id=offer_id,
+            form_offer_label=offer_label,
+        )
+        if _is_htmx(request):
+            return _templates(request).TemplateResponse(
+                request=request,
+                name="partials/creator_form_panel.html",
+                context=ctx,
+                status_code=400,
+            )
+        return _templates(request).TemplateResponse(
+            request=request,
+            name="creator.html",
+            context={"page_title": "Новая кампания", "nav_create": True, **ctx},
+            status_code=400,
+        )
+
+    if _is_htmx(request):
+        success_ctx = await _build_success_context(db, campaign.id)
+        if success_ctx is None:
+            return _templates(request).TemplateResponse(
+                request=request,
+                name="partials/creator_form_panel.html",
+                context=_creator_form_context(error_message="Кампания не найдена после create"),
+                status_code=500,
+            )
+        response = _templates(request).TemplateResponse(
+            request=request,
+            name="partials/creator_success_panel.html",
+            context=success_ctx,
+        )
+        response.headers["HX-Trigger"] = "legkoRecentRefresh"
+        return response
+
+    return RedirectResponse(
+        url=f"/?created={campaign.id}",
+        status_code=303,
+    )
+
+
+@router.get("/campaigns/{campaign_id}/created/panel", response_class=HTMLResponse)
+async def creator_success_panel(
+    request: Request,
+    campaign_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+):
+    ctx = await _build_success_context(db, campaign_id)
+    if ctx is None:
+        return _templates(request).TemplateResponse(
+            request=request,
+            name="partials/creator_form_panel.html",
+            context=_creator_form_context(error_message="Кампания не найдена"),
+            status_code=404,
+        )
+    return _templates(request).TemplateResponse(
+        request=request,
+        name="partials/creator_success_panel.html",
+        context=ctx,
+    )
+
+
+@router.get("/campaigns/{campaign_id}/created", response_class=HTMLResponse)
+async def creator_success(
+    request: Request,
+    campaign_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+):
+    return RedirectResponse(url=f"/?created={campaign_id}", status_code=303)
+
+
+@router.get("/partials/recent-campaigns", response_class=HTMLResponse)
+async def recent_campaigns_partial(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+) -> HTMLResponse:
+    return _templates(request).TemplateResponse(
+        request=request,
+        name="partials/recent_campaigns.html",
+        context={"recent": _recent_view(db)},
     )
 
 

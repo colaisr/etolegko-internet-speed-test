@@ -1,0 +1,49 @@
+{% if recent %}
+<div class="recent-table-wrap">
+  <table class="data-table data-table--recent">
+    <thead>
+      <tr>
+        <th scope="col">Кампания</th>
+        <th scope="col">Keitaro</th>
+        <th scope="col">Geo</th>
+        <th scope="col">Трафик</th>
+        <th scope="col">Обновлено</th>
+        <th scope="col">Статус</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in recent %}
+      <tr
+        class="recent-row"
+        role="button"
+        tabindex="0"
+        data-local-id="{{ item.id }}"
+        onclick="legkoOpenRecent('{{ item.id }}')"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();legkoOpenRecent('{{ item.id }}')}"
+      >
+        <td class="recent-cell-name">
+          <span class="recent-name">{{ item.name }}</span>
+        </td>
+        <td class="recent-cell-id tabular-nums">#{{ item.keitaro_campaign_id }}</td>
+        <td class="recent-cell-geo">{{ item.geo_code }}</td>
+        <td class="recent-cell-url text-muted">
+          {% if item.traffic_label %}{{ item.traffic_label }}{% else %}—{% endif %}
+        </td>
+        <td class="recent-cell-time text-muted tabular-nums">{{ item.updated_label }}</td>
+        <td class="recent-cell-status">
+          <span class="status-pill {{ item.pill_class }}">
+            <span class="status-pill-dot" aria-hidden="true"></span>
+            {{ item.badge_label }}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <p class="empty-state-title">Пока нет кампаний в Legko</p>
+  <p class="text-muted text-muted--compact">Создайте первую связку или откройте существующую из Keitaro.</p>
+</div>
+{% endif %}

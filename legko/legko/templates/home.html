@@ -1,56 +1,95 @@
 {% extends "base.html" %}
 {% block title %}{{ page_title }} — Legko{% endblock %}
 {% block content %}
-<div class="hero-strip">
-  <h1 class="hero-title">Сплит офферов — сначала здесь</h1>
-  <p class="hero-sub">Симулятор ротации до выкладки в Keitaro. Инструмент агентства «Это Легко».</p>
-</div>
-{% if error_message %}
+<header class="hero-strip hero-strip--brand">
+  <div class="hero-strip-inner hero-strip-inner--copy">
+    <div class="hero-copy hero-copy--on-dark">
+      <p class="hero-kicker">Legko × Keitaro</p>
+      <h1 class="hero-title">Сплит офферов — сначала здесь</h1>
+      <p class="hero-sub">Симулируй ротацию до выкладки. Без суеты в админке трекера.</p>
+    </div>
+  </div>
+</header>
+{% if error_message and not open_create_modal %}
 <p class="alert alert-error" role="alert">{{ error_message }}</p>
 {% endif %}
-<div class="grid-2">
-  <div class="card">
-    <h2 class="card-heading">Новая кампания</h2>
-    <p class="text-muted">Шаблон: geo → Google, ротация офферов</p>
-    <a href="/campaigns/new" class="btn-primary">Создать кампанию</a>
+<section class="card card--home-workspace" aria-labelledby="home-open-heading">
+  <div class="workspace-head">
+    <h2 class="card-heading" id="home-open-heading">Открыть кампанию</h2>
+    <p class="text-muted text-muted--compact">Поиск по ID или названию в Keitaro</p>
   </div>
-  <div class="card">
-    <form method="post" action="/campaigns/open" id="open-campaign-form" class="combo-form">
-      <label class="field-label" for="campaign_query">Открыть кампанию Keitaro</label>
-      <input type="hidden" name="keitaro_campaign_id" id="keitaro_campaign_id" value="" />
-      <div class="combo-wrap">
+  <form method="post" action="/campaigns/open" id="open-campaign-form" class="combo-form combo-form--search">
+    <input type="hidden" name="keitaro_campaign_id" id="keitaro_campaign_id" value="" />
+    <div class="search-open-row">
+      <div class="combo-wrap combo-wrap--campaign combo-wrap--search">
+        <label class="visually-hidden" for="campaign_query">Поиск кампании Keitaro</label>
         <input
-          class="field combo-input"
+          class="field combo-input field--search"
           id="campaign_query"
           name="q"
           type="search"
           autocomplete="off"
-          placeholder="ID или название…"
+          placeholder="ID или название кампании…"
           hx-get="/campaigns/search"
           hx-trigger="keyup changed delay:300ms, focus"
           hx-target="#campaign-suggestions"
         />
         <div id="campaign-suggestions" class="combo-dropdown" aria-live="polite"></div>
       </div>
-      <div class="field-row field-row--actions">
-        <button type="submit" class="btn-secondary">Open</button>
-      </div>
-    </form>
-    <p class="field-label field-label--spaced">Недавние</p>
-    {% if recent %}
-    <ul class="recent-list">
-      {% for item in recent %}
-      <li>
-        <a href="/campaigns/{{ item.id }}/editor" class="recent-item">
-          <span><strong>{{ item.name }}</strong> · #{{ item.keitaro_campaign_id }}</span>
-          <span class="badge {{ item.badge_class }}">{{ item.badge_label }}</span>
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p class="text-muted text-muted--compact">Пока пусто — создайте кампанию или откройте из поиска.</p>
-    {% endif %}
+      <button type="button" class="btn-secondary btn-secondary--open" id="open-campaign-preview" disabled>
+        Open
+      </button>
+    </div>
+  </form>
+  <div class="workspace-create-strip">
+    <button
+      type="button"
+      class="btn-primary btn-primary--workspace"
+      id="open-create-campaign"
+      onclick="legkoOpenCreate()"
+    >
+      Создать кампанию
+    </button>
+    <p class="workspace-create-meta">Шаблон: geo → Google · один оффер 100%</p>
   </div>
-</div>
+  <div class="workspace-divider workspace-divider--subtle"></div>
+  <div class="workspace-recent-head">
+    <h3 class="section-title">Недавние</h3>
+    <span class="section-meta">{{ recent|length }} из 10</span>
+  </div>
+  <div id="recent-campaigns" hx-get="/partials/recent-campaigns" hx-trigger="legkoRecentRefresh from:body">
+    {% include "partials/recent_campaigns.html" %}
+  </div>
+</section>
+{% include "partials/app_modal_shell.html" %}
+{% if open_create_modal %}
+<div
+  id="auto-open-create"
+  hx-get="/campaigns/new/panel{% if error_message %}?error={{ error_message | urlencode }}{% endif %}"
+  hx-trigger="load"
+  hx-target="#app-modal-body"
+  hx-swap="innerHTML"
+></div>
+{% endif %}
+{% if created_panel_url %}
+<div
+  id="auto-open-success"
+  hx-get="{{ created_panel_url }}"
+  hx-trigger="load"
+  hx-target="#app-modal-body"
+  hx-swap="innerHTML"
+></div>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/home-modal.js" defer></script>
+<script src="/static/js/home-open.js" defer></script>
+<script src="/static/js/creator.js" defer></script>
+<script>
+  document.body.addEventListener("htmx:afterSwap", (event) => {
+    if (event.detail?.target?.id === "app-modal-body" && window.legkoOpenModal) {
+      window.legkoOpenModal();
+    }
+  });
+</script>
 {% endblock %}

@@ -1,0 +1,18 @@
+<div class="modal-panel modal-panel--recent">
+  <h2 class="modal-title" id="open-modal-title">Открыть кампанию</h2>
+  <p class="text-muted text-muted--compact">Кампания уже в Legko — продолжите в редакторе.</p>
+  <p class="open-campaign-summary">
+    <strong>{{ campaign_name }}</strong><br />
+    <span class="text-muted">Keitaro #{{ keitaro_campaign_id }}</span>
+  </p>
+  <p class="recent-modal-badge">
+    <span class="status-pill {{ pill_class }}">
+      <span class="status-pill-dot" aria-hidden="true"></span>
+      {{ badge_label }}
+    </span>
+  </p>
+  <div class="modal-actions field-row field-row--actions">
+    <button type="button" class="btn-secondary" data-modal-close>Отмена</button>
+    <a href="/campaigns/{{ local_id }}/editor" class="btn-primary">В редактор</a>
+  </div>
+</div>
