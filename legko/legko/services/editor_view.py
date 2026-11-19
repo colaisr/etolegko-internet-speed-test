@@ -1,0 +1,55 @@
+import uuid
+
+from sqlalchemy import select
+from sqlalchemy.orm import Session, selectinload
+
+from legko.models import Campaign, OfferStatus, Stream, StreamType
+
+
+def load_campaign_for_editor(db: Session, local_id: uuid.UUID) -> Campaign | None:
+    stmt = (
+        select(Campaign)
+        .where(Campaign.id == local_id)
+        .options(selectinload(Campaign.streams).selectinload(Stream.offers))
+    )
+    return db.scalars(stmt).first()
+
+
+def _pick_stream(streams: list[Stream], stream_type: StreamType) -> Stream | None:
+    for stream in streams:
+        if stream.stream_type == stream_type:
+            return stream
+    return None
+
+
+def editor_context(campaign: Campaign) -> dict:
+    streams = list(campaign.streams or [])
+    service_stream = _pick_stream(streams, StreamType.SERVICE)
+    offer_stream = _pick_stream(streams, StreamType.OFFER)
+    offers = []
+    if offer_stream is not None:
+        offers = sorted(
+            offer_stream.offers,
+            key=lambda row: (
+                0 if row.status == OfferStatus.ACTIVE else 1,
+                -row.weight_percent,
+                row.keitaro_offer_id,
+            ),
+        )
+
+    active_sum = sum(
+        row.weight_percent for row in offers if row.status == OfferStatus.ACTIVE
+    )
+    geo = (campaign.geo_code or "…").upper()
+
+    return {
+        "campaign": campaign,
+        "service_stream": service_stream,
+        "offer_stream": offer_stream,
+        "offers": offers,
+        "has_streams": bool(streams),
+        "needs_fetch_cta": not streams,
+        "offer_stream_draft": bool(offer_stream and offer_stream.has_draft),
+        "active_weight_sum": active_sum,
+        "service_stream_label": f"Служебный поток ({geo} → Google) — не редактируется",
+    }

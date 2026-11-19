@@ -28,7 +28,7 @@
 
 ## 5. Отличия от замысла (PlanDocs)
 
-Редактор пока **заглушка** (F3); создатель — в [`01-campaign-creator.md`](01-campaign-creator.md).
+Редактор — [`02-stream-offer-editor.md`](02-stream-offer-editor.md) (F3, без F4-операций); создатель — [`01-campaign-creator.md`](01-campaign-creator.md).
 
 ## 6. Связанные страницы
 
@@ -42,3 +42,4 @@
 | 2026-11-19 | home-navigation | Home, open by ID, недавние, заглушки create/editor/docs |
 | 2026-11-19 | home-navigation | Combobox-поиск кампаний Keitaro (HTMX) на главной |
 | 2026-11-19 | campaign-creator | Hero + таблица недавних, status-pill, данные geo/URL/обновлено |
+| 2026-11-19 | stream-editor-fetch-ui | Редактор F3 по переходам с главной; ProductDocs 02 |

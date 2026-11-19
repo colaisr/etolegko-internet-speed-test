@@ -888,3 +888,160 @@ body.modal-open {
 .success-meta dd {
   margin: 0;
 }
+
+.editor-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.editor-fetch-form {
+  margin: 0;
+}
+
+.editor-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.editor-title {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.editor-meta {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.editor-url {
+  margin: 0;
+  font-size: 13px;
+}
+
+.editor-url-code {
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.stream-lock {
+  background: var(--color-bg-app);
+  padding: 12px 14px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  border-left: 3px solid var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stream-lock-icon {
+  flex-shrink: 0;
+}
+
+.editor-offer-card {
+  margin-top: 4px;
+}
+
+.card--draft {
+  border: 2px solid var(--status-draft-border);
+}
+
+.editor-offer-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.editor-offer-head .card-heading {
+  margin: 0;
+}
+
+.stream-tone-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.stream-tone-pill--sync {
+  background: var(--color-bg-app);
+  color: var(--color-text-muted);
+}
+
+.stream-tone-pill--draft {
+  background: rgba(202, 138, 4, 0.12);
+  color: var(--status-draft);
+}
+
+.offer-table-wrap {
+  overflow-x: auto;
+}
+
+.data-table--offers .weight {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.offer-cell-name {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.offer-cell-id {
+  font-size: 12px;
+}
+
+.offer-row--removed {
+  background: var(--status-removed);
+  opacity: 0.88;
+}
+
+.offer-table-foot {
+  text-align: right;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  padding-top: 12px !important;
+}
+
+.sum-ok {
+  color: var(--status-sync);
+}
+
+.editor-f4-hint {
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.editor-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+}
+
+.editor-empty-fetch {
+  margin: 8px 0;
+}

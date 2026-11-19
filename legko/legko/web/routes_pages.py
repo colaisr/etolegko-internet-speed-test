@@ -6,7 +6,9 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
 from legko.db.session import get_db
-from legko.integrations.keitaro.client import KeitaroClient
+from legko.integrations.keitaro.client import KeitaroClient, KeitaroError
+from legko.services.editor_view import editor_context, load_campaign_for_editor
+from legko.services.stream_fetch import full_fetch
 from legko.services.campaign_nav import (
     OpenCampaignError,
     get_campaign_or_404,
@@ -422,26 +424,56 @@ async def recent_campaigns_partial(
     )
 
 
+def _editor_template_context(campaign, *, fetch_error: str | None = None) -> dict:
+    ctx = editor_context(campaign)
+    return {
+        "page_title": campaign.name,
+        "nav_home": False,
+        "badge_label": sync_status_label(campaign.sync_status),
+        "pill_class": sync_status_pill_class(campaign.sync_status),
+        "fetch_error": fetch_error,
+        **ctx,
+    }
+
+
 @router.get("/campaigns/{campaign_id}/editor", response_class=HTMLResponse)
-async def editor_stub(
+async def editor_page(
     request: Request,
     campaign_id: uuid.UUID,
     db: Annotated[Session, Depends(get_db)],
+    fetch_error: str | None = None,
 ):
-    campaign = get_campaign_or_404(db, campaign_id)
+    campaign = load_campaign_for_editor(db, campaign_id)
     if campaign is None:
         return RedirectResponse(url="/?error=Кампания+не+найдена", status_code=303)
     return _templates(request).TemplateResponse(
         request=request,
-        name="editor_stub.html",
-        context={
-            "page_title": campaign.name,
-            "nav_editor": True,
-            "campaign": campaign,
-            "badge_label": sync_status_label(campaign.sync_status),
-            "badge_class": sync_status_badge_class(campaign.sync_status),
-        },
+        name="editor.html",
+        context=_editor_template_context(campaign, fetch_error=fetch_error),
     )
+
+
+@router.post("/campaigns/{campaign_id}/fetch", response_class=RedirectResponse)
+async def campaign_fetch_streams(
+    campaign_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+):
+    from urllib.parse import quote
+
+    campaign = load_campaign_for_editor(db, campaign_id)
+    if campaign is None:
+        return RedirectResponse(url="/?error=Кампания+не+найдена", status_code=303)
+    settings = get_settings()
+    client = KeitaroClient(settings)
+    try:
+        await full_fetch(db, client, campaign)
+    except KeitaroError as exc:
+        msg = quote(exc.user_message, safe="")
+        return RedirectResponse(
+            url=f"/campaigns/{campaign_id}/editor?fetch_error={msg}",
+            status_code=303,
+        )
+    return RedirectResponse(url=f"/campaigns/{campaign_id}/editor", status_code=303)
 
 
 @router.get("/docs", response_class=HTMLResponse)

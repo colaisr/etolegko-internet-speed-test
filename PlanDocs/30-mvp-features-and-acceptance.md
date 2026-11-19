@@ -73,6 +73,8 @@
 
 ## F3 — Загрузка потоков (Fetch)
 
+> **Реализовано** (2026-11-19, change `stream-editor-fetch-ui`). Как работает сейчас: [`ProductDocs/02-stream-offer-editor.md`](../ProductDocs/02-stream-offer-editor.md). F3.5 (merge черновика) — в F7.
+
 **Ценность:** локальная картина = Keitaro до начала черновика.
 
 | AC | Критерий |

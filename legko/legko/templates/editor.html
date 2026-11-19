@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} — Legko{% endblock %}
+{% block content %}
+<section class="editor-page">
+  <div class="editor-toolbar">
+    <a href="/" class="link-back">← Главная</a>
+    <form method="post" action="/campaigns/{{ campaign.id }}/fetch" class="editor-fetch-form">
+      <button type="submit" class="btn-secondary">Fetch Streams</button>
+    </form>
+  </div>
+
+  {% if fetch_error %}
+  <p class="alert alert-error" role="alert">{{ fetch_error }}</p>
+  {% endif %}
+
+  <header class="editor-header">
+    <div class="editor-header-main">
+      <h1 class="editor-title">{{ campaign.name }}</h1>
+      <p class="editor-meta">
+        Keitaro <span class="tabular-nums">#{{ campaign.keitaro_campaign_id }}</span>
+        {% if campaign.geo_code %}
+        · Geo <strong>{{ campaign.geo_code }}</strong>
+        {% endif %}
+      </p>
+    </div>
+    <span class="status-pill {{ pill_class }}">
+      <span class="status-pill-dot" aria-hidden="true"></span>
+      {{ badge_label }}
+    </span>
+  </header>
+
+  {% if campaign.campaign_url %}
+  <p class="editor-url text-muted">
+    URL: <code class="editor-url-code">{{ campaign.campaign_url }}</code>
+  </p>
+  {% endif %}
+
+  {% if needs_fetch_cta %}
+  <div class="empty-state editor-empty-fetch">
+    <p class="empty-state-title">Потоки ещё не загружены</p>
+    <p class="text-muted text-muted--compact">
+      Нажмите <strong>Fetch Streams</strong>, чтобы подтянуть служебный и оффер-потоки из Keitaro.
+    </p>
+  </div>
+  {% else %}
+  <div class="stream-lock" role="note">
+    <span class="stream-lock-icon" aria-hidden="true">🔒</span>
+  {{ service_stream_label }}
+  </div>
+
+  <section class="card editor-offer-card{% if offer_stream_draft %} card--draft{% endif %}">
+    <div class="editor-offer-head">
+      <h2 class="card-heading">Ротация офферов</h2>
+      {% if offer_stream_draft %}
+      <span class="stream-tone-pill stream-tone-pill--draft">Жёлтый · есть черновик</span>
+      {% else %}
+      <span class="stream-tone-pill stream-tone-pill--sync">Белый · как в Keitaro</span>
+      {% endif %}
+    </div>
+
+    {% if offers %}
+    <div class="offer-table-wrap">
+      <table class="data-table data-table--offers">
+        <thead>
+          <tr>
+            <th scope="col">Оффер</th>
+            <th scope="col">Вес %</th>
+            <th scope="col">Pin</th>
+            <th scope="col">Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in offers %}
+          <tr class="offer-row{% if row.status.value == 'removed' %} offer-row--removed{% endif %}">
+            <td class="offer-cell-name">
+              <strong>{{ row.offer_name or '—' }}</strong>
+              <span class="offer-cell-id text-muted">#{{ row.keitaro_offer_id }}</span>
+            </td>
+            <td class="offer-cell-weight weight">{{ row.weight_percent }}%</td>
+            <td class="offer-cell-pin text-muted">{% if row.is_pinned %}Да{% else %}—{% endif %}</td>
+            <td class="offer-cell-status">
+              {% if row.status.value == 'removed' %}
+              <span class="text-muted">Удалён</span>
+              {% else %}
+              <span>Активен</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" class="offer-table-foot">
+              Сумма активных: <strong class="{% if active_weight_sum == 100 %}sum-ok{% endif %}">{{ active_weight_sum }}%</strong>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted">В оффер-потоке нет строк — проверьте кампанию в Keitaro или сделайте Fetch.</p>
+    {% endif %}
+
+    <p class="editor-f4-hint text-muted text-muted--compact">
+      Добавление и правка весов — в change <strong>stream-editor-offer-ops</strong> (F4).
+    </p>
+  </section>
+  {% endif %}
+
+  <footer class="editor-footer">
+    <button type="button" class="btn-secondary" disabled aria-disabled="true">Отменить изменения</button>
+    <button type="button" class="btn-primary btn-primary--disabled" disabled aria-disabled="true">
+      Push в Keitaro
+    </button>
+  </footer>
+</section>
+{% endblock %}

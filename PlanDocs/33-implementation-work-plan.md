@@ -70,7 +70,7 @@
 
 ## Change 3: `campaign-creator`
 
-- [ ] **Заархивирован**
+- [x] **Заархивирован**
 
 | | |
 | --- | --- |
@@ -94,7 +94,7 @@
 
 ## Change 4: `stream-editor-fetch-ui`
 
-- [ ] **Заархивирован**
+- [x] **Заархивирован**
 
 | | |
 | --- | --- |
@@ -216,7 +216,7 @@
 | 1 | `foundation-keitaro-client` | F0 | [x] |
 | 2 | `home-navigation` | F1 | [x] |
 | 3 | `campaign-creator` | F2 | [x] |
-| 4 | `stream-editor-fetch-ui` | F3 | [ ] |
+| 4 | `stream-editor-fetch-ui` | F3 | [x] |
 | 5 | `stream-editor-offer-ops` | F4 | [ ] |
 | 6 | `stream-editor-publish` | F5,F6 | [ ] |
 | 7 | `stream-editor-resync` | F7 | [ ] |

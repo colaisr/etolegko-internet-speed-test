@@ -1,0 +1,19 @@
+{
+  "gate": "docs-sync",
+  "change": "stream-editor-fetch-ui",
+  "round": 1,
+  "verdict": "pass",
+  "reviewed_at": "2026-11-19T08:00:00.000Z",
+  "pages": [
+    "ProductDocs/02-stream-offer-editor.md",
+    "ProductDocs/00-product-overview.md",
+    "ProductDocs/01-campaign-creator.md",
+    "ProductDocs/03-home-and-navigation.md"
+  ],
+  "planDocsMarked": [
+    "PlanDocs/02-stream-offer-editor.md",
+    "PlanDocs/30-mvp-features-and-acceptance.md",
+    "PlanDocs/33-implementation-work-plan.md"
+  ],
+  "findings": []
+}

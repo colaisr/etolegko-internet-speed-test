@@ -1,6 +1,6 @@
 # Обзор Legko
 
-> **Обновлено:** 2026-11-19 · **Change:** campaign-creator · **PlanDocs (F0–F2):** реализовано  
+> **Обновлено:** 2026-11-19 · **Change:** stream-editor-fetch-ui · **PlanDocs (F0–F3):** реализовано  
 > **Замысел:** [PlanDocs/00-product-overview.md](../PlanDocs/00-product-overview.md) · **Технические спеки:** openspec/specs (после archive)
 
 ## 1. Что это и зачем
@@ -18,7 +18,7 @@ Legko — рабочее место медиабайера поверх Keitaro:
 
 **Главная (F1):** поиск и open кампании Keitaro, таблица недавних, модалки — [03-home-and-navigation.md](03-home-and-navigation.md).
 
-**Создатель (F2):** модальное создание 2-поточного шаблона в Keitaro — [01-campaign-creator.md](01-campaign-creator.md). Редактор сплита офферов — в F3+.
+**Создатель (F2):** [01-campaign-creator.md](01-campaign-creator.md). **Редактор / Fetch (F3):** [02-stream-offer-editor.md](02-stream-offer-editor.md) — таблица офферов read-only, Push в F5.
 
 ## 3. Кто что может
 
@@ -36,7 +36,7 @@ Legko — рабочее место медиабайера поверх Keitaro:
 ## 6. Связанные страницы и спеки
 
 - Замысел: [PlanDocs/00-product-overview.md](../PlanDocs/00-product-overview.md)
-- Спеки: `app-foundation`, `keitaro-client`, `health`, `home-navigation`, `campaign-creator`
+- Спеки: `app-foundation`, `keitaro-client`, `health`, `home-navigation`, `campaign-creator`, `stream-editor-fetch`
 
 ## Журнал обновлений
 
@@ -46,3 +46,4 @@ Legko — рабочее место медиабайера поверх Keitaro:
 | 2026-11-19 | docs-sync-followup | Уточнения F0, OpenAPI; синхронизация с планом и хуком push |
 | 2026-11-19 | home-navigation | Ссылка на F1; детализация главной в 03-home |
 | 2026-11-19 | campaign-creator | F2 создатель; обзор и ссылки на 01/03 |
+| 2026-11-19 | stream-editor-fetch-ui | F3 редактор и Fetch; ссылка на 02 |
