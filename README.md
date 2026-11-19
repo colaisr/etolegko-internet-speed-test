@@ -1,64 +1,79 @@
 # Legko
 
-Обёртка над Keitaro (тестовое задание): Legko — симулятор сплита офферов с Push в Keitaro.
+Обёртка над [Keitaro](https://keitaro.io) для тестового задания: создание типовых кампаний и **симулятор сплита офферов** с Push в трекер.
 
-## Память проекта
+**Репозиторий:** https://github.com/colaisr/etolegko-internet-speed-test
 
-| Папка | Назначение |
-| --- | --- |
-| [`AGENTS.md`](AGENTS.md) | Конституция и процесс |
-| [`PlanDocs/`](PlanDocs/README.md) | Замысел продукта (сейчас пустой каталог) |
-| [`ProductDocs/`](ProductDocs/README.md) | Как продукт работает сейчас (пусто) |
-| [`openspec/`](openspec/README.md) | Технические спеки и changes |
-| [`ProjectDocs/`](ProjectDocs/roles/README.md) | Роли агентов, дизайн-артефакты |
-| [`PlanDocs/28-pre-implementation-process.md`](PlanDocs/28-pre-implementation-process.md) | Фазы до реализации (без PM) |
-| [`PlanDocs/33-implementation-work-plan.md`](PlanDocs/33-implementation-work-plan.md) | **Реализация: 8 changes, чеклисты** |
-
-## Запуск приложения
+## Быстрый старт
 
 ```bash
-cd legko
+git clone https://github.com/colaisr/etolegko-internet-speed-test.git
+cd etolegko-internet-speed-test/legko
 python3.12 -m venv .venv && source .venv/bin/activate
-uv pip install -e ".[dev]"   # или pip install -e ".[dev]"
+pip install -e ".[dev]"
 alembic upgrade head
 uvicorn legko.main:app --reload
 ```
 
-### Ключ Keitaro (обязательно)
+Откройте [http://127.0.0.1:8000/](http://127.0.0.1:8000/) — главная Legko.  
+Справка по продукту в приложении: **[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)** (рендер `ProductDocs/`).  
+OpenAPI: `/api/docs`.
 
-1. В трекере: **Account → API keys** — создайте ключ.
-2. В **корне репозитория** (рядом с `PlanDocs/`, не внутри `legko/`):
+### Переменные окружения
+
+Файл **`.env` в корне репозитория** (рядом с `ProductDocs/`, не внутри `legko/`):
 
 ```bash
 cp .env.example .env
 ```
 
-3. В `.env` пропишите:
+Минимум для работы с Keitaro:
 
 ```bash
-KEITARO_API_KEY=ваш_ключ_без_кавычек
-KEITARO_BASE_URL=https://tlgk.host/admin_api/v1   # если другой хост — замените
+KEITARO_API_KEY=ваш_ключ
+KEITARO_BASE_URL=https://tlgk.host/admin_api/v1
 KEITARO_DEFAULT_DOMAIN_ID=...
 KEITARO_DEFAULT_GROUP_ID=...
 KEITARO_DEFAULT_SOURCE_ID=...
 ```
 
-Файл `.env` в git **не коммитится**. Без ключа `/health` и поиск кампаний на главной не работают. Для **создателя кампании** (`/campaigns/new`) нужны три `KEITARO_DEFAULT_*_ID` (ID из Keitaro admin).
+Без ключа `/health` сообщит об ошибке; без `KEITARO_DEFAULT_*` недоступен создатель кампании. `.env` не коммитится.
 
-### Git hooks (ProductDocs перед push)
+### Память проекта
+
+| Папка | Назначение |
+| --- | --- |
+| [`AGENTS.md`](AGENTS.md) | Процесс и правила |
+| [`PlanDocs/`](PlanDocs/README.md) | Замысел продукта |
+| [`ProductDocs/`](ProductDocs/README.md) | Как продукт работает **сейчас** (тот же текст на `/docs`) |
+| [`openspec/`](openspec/README.md) | Технические спеки |
+| [`ProjectDocs/`](ProjectDocs/roles/README.md) | Роли, дизайн |
+
+## Сценарий приёмки (проверяющему)
+
+1. **Главная** — открыть кампанию по Keitaro ID или создать новую.
+2. **Создатель** — имя, geo, оффер → двухпотоковая кампания в Keitaro → переход в редактор.
+3. **Редактор** — при необходимости «Обновить из Keitaro»; Add / Remove / Pin; сумма active **100%**.
+4. **Push** — diff-модалка → подтверждение → веса в Keitaro = таблице.
+5. **Документация** — шапка «Документация» → `/docs` (разделы 00–03).
+
+Подробнее: [`PlanDocs/26-key-flows.md`](PlanDocs/26-key-flows.md), ProductDocs в приложении.
+
+## Разработка
 
 ```bash
-git config core.hooksPath .githooks
-chmod +x .githooks/pre-push
-node scripts/verify-productdocs.mjs   # ручная проверка
+cd legko
+source .venv/bin/activate
+pytest -q
+ruff check .
 ```
 
-## Агенты и OpenSpec
+Перед push:
 
-- Команды Cursor: `.cursor/commands/` (`/opsx:propose`, `/opsx:apply`, …)
-- Роли: `ProjectDocs/roles/`, субагенты Claude: `.claude/agents/`
-- Гейты и verify: `scripts/verify-change-gates.mjs`, `ProjectDocs/roles/openspec-gates.md`
+```bash
+git config core.hooksPath .githooks   # один раз
+node scripts/verify-productdocs.mjs
+node scripts/verify-change-gates.mjs --change <slug>
+```
 
-## Запуск кода
-
-Появится после выбора стека в PlanDocs и первого change «фундамент».
+План этапов: [`PlanDocs/33-implementation-work-plan.md`](PlanDocs/33-implementation-work-plan.md).

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Раздел не найден — Legko{% endblock %}
+{% block content %}
+<section class="docs-layout card card--center">
+  <h1 class="page-title">Раздел не найден</h1>
+  <p class="text-muted">Нет страницы <code>{{ slug }}</code> в ProductDocs.</p>
+  <p><a href="/docs" class="btn-primary">К оглавлению</a></p>
+</section>
+{% endblock %}

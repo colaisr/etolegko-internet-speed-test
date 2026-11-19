@@ -188,7 +188,7 @@
 
 ## Change 8: `project-readme-delivery`
 
-- [ ] **Заархивирован**
+- [x] **Заархивирован**
 
 | | |
 | --- | --- |
@@ -220,7 +220,7 @@
 | 5 | `stream-editor-offer-ops` | F4 | [x] |
 | 6 | `stream-editor-publish` | F5,F6 | [x] |
 | 7 | `stream-editor-resync` | F7 | [x] |
-| 8 | `project-readme-delivery` | F8,F9 | [ ] |
+| 8 | `project-readme-delivery` | F8,F9 | [x] |
 
 ---
 

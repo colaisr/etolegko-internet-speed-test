@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} — Legko{% endblock %}
+{% block content %}
+<section class="docs-layout" aria-labelledby="docs-page-title">
+  <nav class="docs-breadcrumb" aria-label="Навигация">
+    <a href="/docs" class="link-back">← Оглавление</a>
+    <span class="docs-breadcrumb-sep" aria-hidden="true">·</span>
+    <a href="/" class="link-muted">Приложение</a>
+  </nav>
+
+  <aside class="docs-nav docs-nav--side card" aria-label="Разделы">
+    <h2 class="docs-nav-title">Разделы</h2>
+    <ul class="docs-nav-list">
+      {% for page in pages %}
+      <li>
+        <a
+          href="{{ page.href }}"
+          class="docs-nav-link{% if page.slug == slug %} docs-nav-link--active{% endif %}"
+        >
+          {{ page.title }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <article class="card docs-prose docs-prose--page">
+    {{ content_html | safe }}
+  </article>
+
+  <footer class="docs-layout-foot">
+    <a href="/" class="btn-secondary">Вернуться в приложение</a>
+  </footer>
+</section>
+{% endblock %}

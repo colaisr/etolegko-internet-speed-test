@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from legko.db.session import get_db
 from legko.services.health import build_health_report
 from legko.settings import get_settings
+from legko.web.routes_docs import router as docs_router
 from legko.web.routes_pages import router as pages_router
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -20,6 +21,7 @@ app = FastAPI(title="Legko", version="0.1.0", docs_url="/api/docs", redoc_url="/
 app.state.templates = templates
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 app.include_router(pages_router)
+app.include_router(docs_router)
 
 
 @app.get("/health")

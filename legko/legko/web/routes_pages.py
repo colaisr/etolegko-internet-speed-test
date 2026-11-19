@@ -654,11 +654,3 @@ async def editor_unpin_offer_row(
         return _editor_redirect(campaign_id, op_error=exc.user_message)
     return _editor_redirect(campaign_id)
 
-
-@router.get("/docs", response_class=HTMLResponse)
-async def docs_stub(request: Request) -> HTMLResponse:
-    return _templates(request).TemplateResponse(
-        request=request,
-        name="docs_stub.html",
-        context={"page_title": "Документация"},
-    )

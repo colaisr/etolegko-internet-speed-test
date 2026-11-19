@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Документация — Legko{% endblock %}
+{% block content %}
+<section class="docs-layout" aria-labelledby="docs-index-title">
+  <header class="docs-layout-head">
+    <h1 class="page-title" id="docs-index-title">Документация</h1>
+    <p class="text-muted">Как продукт Legko работает сейчас — из <code>ProductDocs/</code> в репозитории.</p>
+  </header>
+
+  <nav class="docs-nav card" aria-label="Разделы документации">
+    <h2 class="docs-nav-title">Разделы</h2>
+    <ul class="docs-nav-list">
+      {% for page in pages %}
+      <li>
+        <a href="{{ page.href }}" class="docs-nav-link">{{ page.title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+
+  {% if index_html %}
+  <article class="card docs-prose">
+    {{ index_html | safe }}
+  </article>
+  {% endif %}
+
+  <footer class="docs-layout-foot">
+    <a href="/" class="btn-secondary">Вернуться в приложение</a>
+  </footer>
+</section>
+{% endblock %}
