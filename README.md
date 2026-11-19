@@ -14,6 +14,17 @@
 | [`PlanDocs/28-pre-implementation-process.md`](PlanDocs/28-pre-implementation-process.md) | Фазы до реализации (без PM) |
 | [`PlanDocs/33-implementation-work-plan.md`](PlanDocs/33-implementation-work-plan.md) | **Реализация: 8 changes, чеклисты** |
 
+## Запуск приложения (change foundation)
+
+```bash
+cd legko
+python3.12 -m venv .venv && source .venv/bin/activate
+uv pip install -e ".[dev]"   # или pip install -e ".[dev]"
+cp ../.env.example ../.env    # заполнить KEITARO_API_KEY
+alembic upgrade head
+uvicorn legko.main:app --reload
+```
+
 ## Агенты и OpenSpec
 
 - Команды Cursor: `.cursor/commands/` (`/opsx:propose`, `/opsx:apply`, …)

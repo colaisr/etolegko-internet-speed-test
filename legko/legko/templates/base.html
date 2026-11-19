@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Legko{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/legko-tokens.css" />
+  <link rel="stylesheet" href="/static/css/components.css" />
+</head>
+<body>
+  <header class="app-header">
+    <a href="/" class="logo" aria-label="Legko — на главную">
+      <span class="logo-cube" aria-hidden="true"></span>
+      <span>LEGKO</span>
+    </a>
+    <nav class="app-nav">
+      <a class="nav-link" href="/">Главная</a>
+      <a class="nav-link nav-link--muted" href="/docs">Документация</a>
+    </nav>
+  </header>
+  <main class="main">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -22,7 +22,7 @@
 
 | Файл | Что описывает | Замысел (PlanDocs) | Спеки (OpenSpec) | Обновлено |
 | --- | --- | --- | --- | --- |
-| — | — | — | — | — |
+| [`00-product-overview.md`](00-product-overview.md) | Что такое Legko сейчас | [`00-product-overview`](../PlanDocs/00-product-overview.md) | app-foundation, health | 2026-11-19 · foundation-keitaro-client |
 
 ## 4. Как добавить страницу
 
