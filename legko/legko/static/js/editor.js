@@ -87,23 +87,80 @@ function rowPreviewWeight(row) {
   return parseWeightNumber(cell?.textContent);
 }
 
-function updateWeightSumPreview() {
-  const hero = document.getElementById("editor-weight-hero");
-  const valueEl = document.getElementById("editor-weight-sum-value");
-  if (!hero || !valueEl) return;
-
+function computeActiveWeightPreview() {
   let sum = 0;
   let activeCount = 0;
   document.querySelectorAll(".offer-row:not(.offer-row--removed)").forEach((row) => {
     sum += rowPreviewWeight(row);
     activeCount += 1;
   });
+  return { sum, activeCount };
+}
+
+function clientPushReady(sum, activeCount) {
+  return activeCount > 0 && sum === 100;
+}
+
+function updatePublishDock(sum, activeCount) {
+  const dock = document.getElementById("editor-publish-dock");
+  const openBtn = document.getElementById("editor-open-push");
+  const hintEl = document.getElementById("editor-publish-hint");
+  if (!dock || !openBtn || !hintEl) return;
+
+  const serverCanPush = dock.dataset.serverCanPush === "1";
+  const hasDraft = dock.dataset.hasDraft === "1";
+  const ready = clientPushReady(sum, activeCount);
+  const canOpenPush = serverCanPush && hasDraft && ready;
+
+  openBtn.disabled = !canOpenPush;
+  openBtn.setAttribute("aria-disabled", canOpenPush ? "false" : "true");
+  openBtn.classList.toggle("btn-primary--disabled", !canOpenPush);
+
+  hintEl.classList.remove("editor-publish-hint--warn");
+  let title = "";
+
+  if (!ready) {
+    hintEl.classList.add("editor-publish-hint--warn");
+    if (activeCount === 0) {
+      title = "Нет активных офферов";
+      hintEl.textContent = "Нет активных офферов — добавьте строку или верните удалённую.";
+    } else {
+      title = `Сумма ${sum}% (нужно 100%)`;
+      hintEl.textContent =
+        `Сумма ${sum}% — доведите активные веса до 100%. ` +
+        "Проверьте поля «Закрепить %» и нажмите «Закрепить» для каждой строки.";
+    }
+  } else if (!hasDraft) {
+    title = "Нет изменений";
+    hintEl.textContent = "Изменений нет — Push станет доступен после правок.";
+  } else if (!serverCanPush) {
+    title = dock.dataset.pushDisabledReason || "Push недоступен";
+    hintEl.textContent = title;
+    hintEl.classList.add("editor-publish-hint--warn");
+  } else {
+    hintEl.textContent = "Веса в норме. Push выложит черновик в Keitaro.";
+  }
+  openBtn.title = title;
+
+  document.querySelectorAll(".field--pin").forEach((input) => {
+    const dirty = input.dataset.pinPreview === "1";
+    input.classList.toggle("field--pin-warn", dirty && sum !== 100);
+  });
+}
+
+function updateWeightSumPreview() {
+  const hero = document.getElementById("editor-weight-hero");
+  const valueEl = document.getElementById("editor-weight-sum-value");
+  if (!hero || !valueEl) return;
+
+  const { sum, activeCount } = computeActiveWeightPreview();
 
   valueEl.textContent = `${sum}%`;
-  const ok = activeCount > 0 && sum === 100;
+  const ok = clientPushReady(sum, activeCount);
   hero.classList.toggle("editor-weight-hero--ok", ok);
   valueEl.classList.toggle("editor-weight-value--ok", ok);
   valueEl.classList.toggle("editor-weight-value--warn", activeCount > 0 && sum !== 100);
+  updatePublishDock(sum, activeCount);
 }
 
 function bindEditorPinPreview() {
@@ -157,7 +214,8 @@ function bindEditorPushModal() {
 
   openBtn.addEventListener("click", async () => {
     const url = openBtn.getAttribute("data-push-preview-url");
-    if (!url || openBtn.disabled) return;
+    const { sum, activeCount } = computeActiveWeightPreview();
+    if (!url || openBtn.disabled || !clientPushReady(sum, activeCount)) return;
     body.innerHTML = '<p class="text-muted">Загружаем diff…</p>';
     backdrop.hidden = false;
     backdrop.classList.add("modal-backdrop--open");

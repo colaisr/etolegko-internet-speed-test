@@ -137,52 +137,85 @@
           </tr>
           {% endfor %}
         </tbody>
+        <tfoot>
+          <tr class="offer-row offer-row--add">
+            <td class="offer-cell-name offer-cell-add" colspan="4">
+              <form method="post" action="/campaigns/{{ campaign.id }}/offers" class="editor-add-form editor-add-form--ghost">
+                <input type="hidden" name="offer_id" id="editor_offer_id" value="" />
+                <span class="offer-row-add-plus" aria-hidden="true">+</span>
+                <span class="visually-hidden" id="editor-add-heading">Добавить оффер в ротацию</span>
+                <div class="combo-wrap combo-wrap--offer combo-wrap--editor-add">
+                  <label class="visually-hidden" for="editor_offer_query">Поиск оффера Keitaro</label>
+                  <input
+                    class="field combo-input field--ghost-row"
+                    id="editor_offer_query"
+                    type="search"
+                    autocomplete="off"
+                    placeholder="Добавить оффер — ID или название…"
+                    aria-labelledby="editor-add-heading"
+                    hx-get="/offers/search"
+                    hx-trigger="keyup changed delay:300ms, focus"
+                    hx-target="#editor-offer-suggestions"
+                  />
+                  <div id="editor-offer-suggestions" class="combo-dropdown" aria-live="polite"></div>
+                </div>
+                <button type="submit" class="btn-secondary btn-secondary--open btn-secondary--compact">Добавить</button>
+              </form>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
     {% else %}
     <p class="editor-table-empty text-muted">В оффер-потоке нет строк — обновите из Keitaro или проверьте кампанию.</p>
-    {% endif %}
-
-    <section class="editor-add-strip" aria-labelledby="editor-add-heading">
-      <h3 class="editor-add-title" id="editor-add-heading">Добавить в ротацию</h3>
-      <form method="post" action="/campaigns/{{ campaign.id }}/offers" class="editor-add-form">
-        <input type="hidden" name="offer_id" id="editor_offer_id" value="" />
-        <div class="search-open-row combo-wrap--editor-add">
-          <div class="combo-wrap combo-wrap--offer">
-            <label class="visually-hidden" for="editor_offer_query">Поиск оффера Keitaro</label>
-            <input
-              class="field combo-input"
-              id="editor_offer_query"
-              type="search"
-              autocomplete="off"
-              placeholder="ID или название оффера…"
-              hx-get="/offers/search"
-              hx-trigger="keyup changed delay:300ms, focus"
-              hx-target="#editor-offer-suggestions"
-            />
-            <div id="editor-offer-suggestions" class="combo-dropdown" aria-live="polite"></div>
-          </div>
-          <button type="submit" class="btn-secondary btn-secondary--open">Добавить</button>
+    <form method="post" action="/campaigns/{{ campaign.id }}/offers" class="editor-add-form editor-add-form--lonely">
+      <input type="hidden" name="offer_id" id="editor_offer_id" value="" />
+      <div class="search-open-row combo-wrap--editor-add">
+        <div class="combo-wrap combo-wrap--offer">
+          <label class="visually-hidden" for="editor_offer_query">Поиск оффера Keitaro</label>
+          <input
+            class="field combo-input"
+            id="editor_offer_query"
+            type="search"
+            autocomplete="off"
+            placeholder="ID или название оффера…"
+            hx-get="/offers/search"
+            hx-trigger="keyup changed delay:300ms, focus"
+            hx-target="#editor-offer-suggestions"
+          />
+          <div id="editor-offer-suggestions" class="combo-dropdown" aria-live="polite"></div>
         </div>
-      </form>
-    </section>
+        <button type="submit" class="btn-secondary btn-secondary--open">Добавить</button>
+      </div>
+    </form>
+    {% endif %}
   </article>
 
-  <footer class="editor-publish-dock" aria-label="Публикация в Keitaro">
+  <footer
+    id="editor-publish-dock"
+    class="editor-publish-dock"
+    aria-label="Публикация в Keitaro"
+    data-server-can-push="{{ 1 if can_push else 0 }}"
+    data-has-draft="{{ 1 if offer_stream_draft else 0 }}"
+    data-push-disabled-reason="{{ push_disabled_reason or '' }}"
+  >
     <div class="editor-publish-status">
-      {% if not weights_valid %}
-      <p class="editor-publish-hint editor-publish-hint--warn">
-        {% if active_offer_count == 0 %}
-        Нет активных офферов — добавьте строку или верните удалённую.
-        {% elif active_weight_sum != 100 %}
-        Сумма {{ active_weight_sum }}% — доведите активные веса до 100% перед Push.
+      <p
+        id="editor-publish-hint"
+        class="editor-publish-hint{% if not weights_valid %} editor-publish-hint--warn{% endif %}"
+      >
+        {% if not weights_valid %}
+          {% if active_offer_count == 0 %}
+          Нет активных офферов — добавьте строку или верните удалённую.
+          {% elif active_weight_sum != 100 %}
+          Сумма {{ active_weight_sum }}% — доведите активные веса до 100% перед Push.
+          {% endif %}
+        {% elif offer_stream_draft %}
+        Веса в норме. Push выложит черновик в Keitaro.
+        {% else %}
+        Изменений нет — Push станет доступен после правок.
         {% endif %}
       </p>
-      {% elif offer_stream_draft %}
-      <p class="editor-publish-hint">Веса в норме. Push выложит черновик в Keitaro.</p>
-      {% else %}
-      <p class="editor-publish-hint">Изменений нет — Push станет доступен после правок.</p>
-      {% endif %}
     </div>
     <div class="editor-publish-actions">
       <form method="post" action="/campaigns/{{ campaign.id }}/cancel" class="editor-cancel-form">

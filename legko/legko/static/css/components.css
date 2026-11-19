@@ -1285,6 +1285,11 @@ body.modal-open {
   margin: 0;
 }
 
+.data-table--offers .field--pin.field--pin-warn {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.25);
+}
+
 .offer-cell-title {
   display: block;
   max-width: 420px;
@@ -1359,21 +1364,60 @@ body.modal-open {
   margin: 0 0 20px;
 }
 
-.editor-add-strip {
-  margin: 28px -28px -28px;
-  padding: 22px 28px 26px;
-  border-top: 1px solid var(--color-border);
-  background: linear-gradient(180deg, rgba(200, 245, 66, 0.1) 0%, rgba(200, 245, 66, 0.02) 100%);
-  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+.offer-row--add td {
+  border-top: 1px dashed var(--color-border);
+  background: rgba(244, 244, 245, 0.65);
+  padding: 12px 16px;
 }
 
-.editor-add-title {
-  margin: 0 0 10px;
-  font-size: 11px;
+.offer-row--add:hover td {
+  background: rgba(200, 245, 66, 0.07);
+}
+
+.offer-cell-add {
+  padding: 12px 16px !important;
+}
+
+.editor-add-form--ghost {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  width: 100%;
+}
+
+.offer-row-add-plus {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--color-text-muted);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.editor-add-form--ghost .combo-wrap--editor-add {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.field--ghost-row {
+  background: var(--color-surface);
+}
+
+.editor-add-form--ghost .btn-secondary--compact {
+  min-height: 38px;
+  flex-shrink: 0;
+}
+
+.editor-add-form--lonely {
+  margin-top: 16px;
 }
 
 .editor-add-form {
@@ -1384,6 +1428,29 @@ body.modal-open {
   max-width: 100%;
   flex: 1;
   min-width: min(100%, 240px);
+}
+
+/* Add row sits in tfoot; overflow-x on .offer-table-wrap clips downward dropdowns */
+.offer-row--add {
+  position: relative;
+  z-index: 3;
+}
+
+.combo-wrap--editor-add .combo-dropdown {
+  top: auto;
+  bottom: calc(100% + 2px);
+  border-top: 1px solid var(--color-border);
+  border-bottom: none;
+  box-shadow: 0 -10px 28px rgba(0, 0, 0, 0.1);
+  z-index: 25;
+}
+
+.editor-add-form--lonely .combo-dropdown {
+  top: auto;
+  bottom: auto;
+  border-top: none;
+  border-bottom: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .editor-add-form .combo-wrap {

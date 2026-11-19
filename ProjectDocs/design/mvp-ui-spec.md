@@ -80,7 +80,7 @@ Domain/Group/Source на редакторе **не показываем** (шу�
 | Действия | Remove / Bring back |
 
 - Строка **removed:** opacity 0.55, фон `#f4f4f5`.
-- **Add offer:** под таблицей, combobox + «Добавить».
+- **Add offer:** ghost-строка внизу таблицы (`tfoot`), «+» + combobox + «Добавить» (визуально продолжение списка).
 
 ### 5.4 Footer actions
 

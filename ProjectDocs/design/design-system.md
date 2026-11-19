@@ -161,7 +161,7 @@ States: hover, disabled (opacity .45), loading (spinner).
 ### `EditorWorkspace` (`card--editor-lab`)
 
 - Как **workspace-create-strip** на Home: верхняя граница 3px accent, лёгкий лаймовый градиент фона, тень с зелёным оттенком.
-- Таблица в рамке; hover строки — лайм 7%; блок «Добавить» — градиентная полоса снизу карточки.
+- Таблица в рамке; hover строки — лайм 7%; **добавление оффера** — ghost-строка (`offer-row--add`) в `tfoot` таблицы (не отдельная градиентная полоса).
 - Dock Push: верх 3px accent (связь с header hero).
 
 ### `EditorCommandBar`
