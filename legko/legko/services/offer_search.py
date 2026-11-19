@@ -21,11 +21,11 @@ def filter_offers(offers: list[dict], query: str, *, limit: int = 15) -> list[di
     return out
 
 
-async def search_keitaro_offers(client: KeitaroClient, query: str) -> list[dict]:
+async def search_keitaro_offers(client: KeitaroClient, query: str) -> tuple[list[dict], int]:
     try:
-        offers = await client.list_offers(limit=200)
+        offers = await client.list_offers(limit=500)
     except KeitaroError:
-        return []
+        return [], 0
     normalized = [
         {
             "id": o.get("id"),
@@ -34,4 +34,4 @@ async def search_keitaro_offers(client: KeitaroClient, query: str) -> list[dict]
         for o in offers
         if o.get("id") is not None
     ]
-    return filter_offers(normalized, query)
+    return filter_offers(normalized, query), len(normalized)

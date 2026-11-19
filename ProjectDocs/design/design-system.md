@@ -84,6 +84,11 @@
 
 States: hover, disabled (opacity .45), loading (spinner).
 
+### `IconButton` (`btn-icon`)
+
+- Квадрат 34×34 для действий в таблице редактора; stroke-SVG 16px, `title` + `aria-label`.
+- Варианты: `btn-icon--ghost`, `btn-icon--accent` (pin), `btn-icon--danger` (remove).
+
 ### `Input` / `Select`
 
 - Высота 40px, border `--color-border`, focus ring 2px accent.
@@ -122,7 +127,7 @@ States: hover, disabled (opacity .45), loading (spinner).
 
 ### `StreamMutedRow`
 
-- Одна строка, иконка lock, `text-muted`, full width.
+- Внутри editor workspace: lock, название служебного потока, подпись «не редактируется»; фон app, левая граница.
 
 ### `HeroStrip` (Home)
 
@@ -153,13 +158,30 @@ States: hover, disabled (opacity .45), loading (spinner).
 
 - URL кампании + кнопка copy (accent icon).
 
+### `EditorWorkspace` (`card--editor-lab`)
+
+- Как **workspace-create-strip** на Home: верхняя граница 3px accent, лёгкий лаймовый градиент фона, тень с зелёным оттенком.
+- Таблица в рамке; hover строки — лайм 7%; блок «Добавить» — градиентная полоса снизу карточки.
+- Dock Push: верх 3px accent (связь с header hero).
+
+### `EditorCommandBar`
+
+- Верх редактора: kicker **лайм** (как hero-kicker), **имя + StatusPill**, Keitaro id · geo (muted).
+- Справа: `CopyField` (если есть URL) + **Fetch Streams** (secondary).
+- Не дублировать hero Home — светлая зона, разделитель снизу.
+
+### `EditorPublishDock`
+
+- Sticky footer: слева подсказка (веса / готовность Push), справа **Отменить** + **Push** (primary).
+- Push disabled с понятным title/hint при Σ ≠ 100%.
+
 ## 3. Макет страниц
 
 | Страница | Структура |
 | --- | --- |
 | Home | Header dark + hero copy; card: search/Open, create strip по центру, таблица недавних |
 | Creator | Модалка на Home: форма + preview + env read-only |
-| Editor | Header campaign meta + Card table + sticky footer Push/Cancel |
+| Editor | `EditorCommandBar` (статус, Σ, Fetch, Copy URL) + `editor-workspace` (таблица) + `EditorPublishDock` |
 
 ## 4. Реализация (фаза E)
 

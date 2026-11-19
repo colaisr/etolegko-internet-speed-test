@@ -137,12 +137,35 @@ class KeitaroClient:
                 return [row for row in rows if isinstance(row, dict)]
         return []
 
-    async def list_offers(self, *, limit: int = 200) -> list[dict]:
-        response = await self._request_checked("GET", "offers", params={"limit": limit})
-        data = response.json()
+    @staticmethod
+    def _parse_list_payload(data: object) -> list[dict]:
         if isinstance(data, list):
             return [row for row in data if isinstance(row, dict)]
+        if isinstance(data, dict):
+            for key in ("rows", "data", "offers"):
+                rows = data.get(key)
+                if isinstance(rows, list):
+                    return [row for row in rows if isinstance(row, dict)]
         return []
+
+    async def list_offers(self, *, limit: int = 500) -> list[dict]:
+        page_size = min(100, limit)
+        offset = 0
+        collected: list[dict] = []
+        while len(collected) < limit:
+            response = await self._request_checked(
+                "GET",
+                "offers",
+                params={"limit": page_size, "offset": offset},
+            )
+            batch = self._parse_list_payload(response.json())
+            if not batch:
+                break
+            collected.extend(batch)
+            if len(batch) < page_size:
+                break
+            offset += page_size
+        return collected[:limit]
 
     async def get_offer(self, offer_id: int) -> dict | None:
         response = await self._request("GET", f"offers/{offer_id}")

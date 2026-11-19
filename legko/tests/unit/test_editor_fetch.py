@@ -1,5 +1,7 @@
 from unittest.mock import AsyncMock, patch
 
+import random
+
 from starlette.testclient import TestClient
 
 from legko.db.base import Base
@@ -32,7 +34,7 @@ def test_editor_page_renders_offer_table():
     db = SessionLocal()
     try:
         campaign = Campaign(
-            keitaro_campaign_id=880_001,
+            keitaro_campaign_id=random.randint(880_000_001, 880_999_999),
             name="Editor test",
             geo_code="US",
             sync_status=SyncStatus.SYNCED,
@@ -71,7 +73,7 @@ def test_editor_page_renders_offer_table():
     assert response.status_code == 200
     assert "Ротация офферов" in response.text
     assert "Flexacil" in response.text
-    assert "Fetch Streams" in response.text
+    assert "Обновить из Keitaro" in response.text
     assert "Служебный поток" in response.text
 
 
@@ -80,7 +82,7 @@ def test_editor_empty_streams_shows_fetch_cta():
     db = SessionLocal()
     try:
         campaign = Campaign(
-            keitaro_campaign_id=880_002,
+            keitaro_campaign_id=random.randint(881_000_001, 881_999_999),
             name="Empty",
             sync_status=SyncStatus.NEEDS_FETCH,
         )
@@ -100,7 +102,10 @@ def test_fetch_post_redirects_to_editor():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
-        campaign = Campaign(keitaro_campaign_id=880_003, name="Fetch me")
+        campaign = Campaign(
+            keitaro_campaign_id=random.randint(882_000_001, 882_999_999),
+            name="Fetch me",
+        )
         db.add(campaign)
         db.commit()
         local_id = campaign.id

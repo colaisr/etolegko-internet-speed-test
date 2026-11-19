@@ -29,6 +29,13 @@ from legko.services.campaign_creator import (
     parse_offer_id,
     success_context,
 )
+from legko.services.offer_editor import (
+    OfferEditorError,
+    add_offer,
+    remove_offer,
+    restore_offer,
+    set_pin,
+)
 from legko.services.campaign_search import search_keitaro_campaigns
 from legko.services.offer_search import search_keitaro_offers
 from legko.settings import get_settings
@@ -229,11 +236,15 @@ async def offer_search(
 ) -> HTMLResponse:
     settings = get_settings()
     client = KeitaroClient(settings)
-    items = await search_keitaro_offers(client, q)
+    items, keitaro_total = await search_keitaro_offers(client, q)
     return _templates(request).TemplateResponse(
         request=request,
         name="partials/offer_search_results.html",
-        context={"items": items, "query": q.strip()},
+        context={
+            "items": items,
+            "query": q.strip(),
+            "keitaro_offer_total": keitaro_total,
+        },
     )
 
 
@@ -424,7 +435,12 @@ async def recent_campaigns_partial(
     )
 
 
-def _editor_template_context(campaign, *, fetch_error: str | None = None) -> dict:
+def _editor_template_context(
+    campaign,
+    *,
+    fetch_error: str | None = None,
+    op_error: str | None = None,
+) -> dict:
     ctx = editor_context(campaign)
     return {
         "page_title": campaign.name,
@@ -432,8 +448,18 @@ def _editor_template_context(campaign, *, fetch_error: str | None = None) -> dic
         "badge_label": sync_status_label(campaign.sync_status),
         "pill_class": sync_status_pill_class(campaign.sync_status),
         "fetch_error": fetch_error,
+        "op_error": op_error,
         **ctx,
     }
+
+
+def _editor_redirect(campaign_id: uuid.UUID, *, op_error: str | None = None) -> RedirectResponse:
+    from urllib.parse import quote
+
+    base = f"/campaigns/{campaign_id}/editor"
+    if op_error:
+        return RedirectResponse(url=f"{base}?op_error={quote(op_error, safe='')}", status_code=303)
+    return RedirectResponse(url=base, status_code=303)
 
 
 @router.get("/campaigns/{campaign_id}/editor", response_class=HTMLResponse)
@@ -442,6 +468,7 @@ async def editor_page(
     campaign_id: uuid.UUID,
     db: Annotated[Session, Depends(get_db)],
     fetch_error: str | None = None,
+    op_error: str | None = None,
 ):
     campaign = load_campaign_for_editor(db, campaign_id)
     if campaign is None:
@@ -449,7 +476,7 @@ async def editor_page(
     return _templates(request).TemplateResponse(
         request=request,
         name="editor.html",
-        context=_editor_template_context(campaign, fetch_error=fetch_error),
+        context=_editor_template_context(campaign, fetch_error=fetch_error, op_error=op_error),
     )
 
 
@@ -474,6 +501,82 @@ async def campaign_fetch_streams(
             status_code=303,
         )
     return RedirectResponse(url=f"/campaigns/{campaign_id}/editor", status_code=303)
+
+
+@router.post("/campaigns/{campaign_id}/offers", response_class=RedirectResponse)
+async def editor_add_offer(
+    campaign_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+    offer_id: Annotated[str, Form()] = "",
+):
+    settings = get_settings()
+    client = KeitaroClient(settings)
+    try:
+        oid = parse_offer_id(offer_id)
+        await add_offer(db, client, campaign_id, keitaro_offer_id=oid)
+    except (CreatorValidationError, OfferEditorError, KeitaroError) as exc:
+        msg = getattr(exc, "user_message", str(exc))
+        return _editor_redirect(campaign_id, op_error=msg)
+    return _editor_redirect(campaign_id)
+
+
+@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/remove", response_class=RedirectResponse)
+async def editor_remove_offer_row(
+    campaign_id: uuid.UUID,
+    offer_row_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+):
+    try:
+        remove_offer(db, campaign_id, offer_row_id)
+    except OfferEditorError as exc:
+        return _editor_redirect(campaign_id, op_error=exc.user_message)
+    return _editor_redirect(campaign_id)
+
+
+@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/restore", response_class=RedirectResponse)
+async def editor_restore_offer_row(
+    campaign_id: uuid.UUID,
+    offer_row_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+):
+    try:
+        restore_offer(db, campaign_id, offer_row_id)
+    except OfferEditorError as exc:
+        return _editor_redirect(campaign_id, op_error=exc.user_message)
+    return _editor_redirect(campaign_id)
+
+
+@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/pin", response_class=RedirectResponse)
+async def editor_pin_offer_row(
+    campaign_id: uuid.UUID,
+    offer_row_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+    pin_percent: Annotated[str, Form()] = "",
+):
+    percent: int | None = None
+    if pin_percent.strip():
+        try:
+            percent = int(pin_percent.strip())
+        except ValueError:
+            return _editor_redirect(campaign_id, op_error="Pin % должен быть числом")
+    try:
+        set_pin(db, campaign_id, offer_row_id, enabled=True, percent=percent)
+    except OfferEditorError as exc:
+        return _editor_redirect(campaign_id, op_error=exc.user_message)
+    return _editor_redirect(campaign_id)
+
+
+@router.post("/campaigns/{campaign_id}/offers/{offer_row_id}/unpin", response_class=RedirectResponse)
+async def editor_unpin_offer_row(
+    campaign_id: uuid.UUID,
+    offer_row_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+):
+    try:
+        set_pin(db, campaign_id, offer_row_id, enabled=False)
+    except OfferEditorError as exc:
+        return _editor_redirect(campaign_id, op_error=exc.user_message)
+    return _editor_redirect(campaign_id)
 
 
 @router.get("/docs", response_class=HTMLResponse)

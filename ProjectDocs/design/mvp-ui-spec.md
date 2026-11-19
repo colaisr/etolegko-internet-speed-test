@@ -45,12 +45,16 @@
 
 ## 5. Экран: Editor
 
-### 5.1 Шапка
+### 5.1 Command bar + workspace
 
 ```
-[← Home]  Campaign name · ID · [бейдж статуса]     [Fetch Streams]
-Campaign URL (copy) · Domain / Group / Source (muted)
+EditorCommandBar: kicker · name + StatusPill · Keitaro# · Geo     [Copy URL] [Fetch]
+Баннер: синхронно / черновик (P4)
+Card workspace: Σ активных крупно · таблица · StreamMutedRow · add strip
+EditorPublishDock (sticky): hint весов | Cancel · Push
 ```
+
+Domain/Group/Source на редакторе **не показываем** (шум; есть в creator и не нужны байеру при сплите).
 
 **Бейджи:**
 

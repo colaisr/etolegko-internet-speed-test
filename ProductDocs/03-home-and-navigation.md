@@ -28,7 +28,7 @@
 
 ## 5. Отличия от замысла (PlanDocs)
 
-Редактор — [`02-stream-offer-editor.md`](02-stream-offer-editor.md) (F3, без F4-операций); создатель — [`01-campaign-creator.md`](01-campaign-creator.md).
+Редактор — [`02-stream-offer-editor.md`](02-stream-offer-editor.md) (Fetch F3 + локальные операции F4); создатель — [`01-campaign-creator.md`](01-campaign-creator.md).
 
 ## 6. Связанные страницы
 

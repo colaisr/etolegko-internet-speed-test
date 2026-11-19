@@ -37,10 +37,12 @@ def editor_context(campaign: Campaign) -> dict:
             ),
         )
 
+    active_count = sum(1 for row in offers if row.status == OfferStatus.ACTIVE)
     active_sum = sum(
         row.weight_percent for row in offers if row.status == OfferStatus.ACTIVE
     )
     geo = (campaign.geo_code or "…").upper()
+    weights_valid = active_sum == 100 and active_count > 0
 
     return {
         "campaign": campaign,
@@ -51,5 +53,7 @@ def editor_context(campaign: Campaign) -> dict:
         "needs_fetch_cta": not streams,
         "offer_stream_draft": bool(offer_stream and offer_stream.has_draft),
         "active_weight_sum": active_sum,
-        "service_stream_label": f"Служебный поток ({geo} → Google) — не редактируется",
+        "active_offer_count": active_count,
+        "weights_valid": weights_valid,
+        "service_stream_label": f"Служебный поток ({geo} → Google)",
     }

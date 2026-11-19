@@ -118,7 +118,7 @@
 
 ## Change 5: `stream-editor-offer-ops`
 
-- [ ] **Заархивирован**
+- [x] **Заархивирован**
 
 | | |
 | --- | --- |
@@ -217,7 +217,7 @@
 | 2 | `home-navigation` | F1 | [x] |
 | 3 | `campaign-creator` | F2 | [x] |
 | 4 | `stream-editor-fetch-ui` | F3 | [x] |
-| 5 | `stream-editor-offer-ops` | F4 | [ ] |
+| 5 | `stream-editor-offer-ops` | F4 | [x] |
 | 6 | `stream-editor-publish` | F5,F6 | [ ] |
 | 7 | `stream-editor-resync` | F7 | [ ] |
 | 8 | `project-readme-delivery` | F8,F9 | [ ] |

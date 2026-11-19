@@ -6,7 +6,17 @@
 {% endif %}
 {% else %}
 {% if not query %}
-<p class="combo-hint text-muted text-muted--compact">Недавние / популярные офферы — выберите или введите ID / название</p>
+<p class="combo-hint text-muted text-muted--compact">
+  {% if keitaro_offer_total and keitaro_offer_total <= 5 %}
+  Keitaro API отдал {{ keitaro_offer_total }} оффер(ов) — ниже список. Нет нужного? Введите <strong>числовой ID</strong> в поле и нажмите «Добавить» / «Создать».
+  {% else %}
+  Выберите из списка или введите ID / название для поиска.
+  {% endif %}
+</p>
+{% elif not items and query %}
+<p class="combo-hint text-muted text-muted--compact">
+  В списке API нет совпадений. Если знаете ID — введите его и отправьте форму.
+</p>
 {% endif %}
 <ul class="combo-list" role="listbox">
   {% for item in items %}
